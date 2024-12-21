@@ -1,0 +1,1434 @@
+{
+  "address": "0x20C9c54bd86C309d3Cc71Ba73BcA701711dEC5bC",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "GitHubStaking__CannotDeclareYourselfWinner",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "GitHubStaking__CreatorRightsOnly",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "GitHubStaking__DeductionError",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "GitHubStaking__IssueAlreadyExists",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "GitHubStaking__IssueAlreadySolved",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "GitHubStaking__IssueCreatorCannotStake",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "repoId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "issueId",
+          "type": "uint256"
+        }
+      ],
+      "name": "GitHubStaking__IssueDoesNotExist",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "GitHubStaking__IssueHasStakers",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "GitHubStaking__MinAllowedBalanceReached",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "GitHubStaking__MinPrizeRequired",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "GitHubStaking__MinStakeAmtRequired",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "GitHubStaking__NoWithdrawals",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "GitHubStaking__NotEnoughETHSent",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        }
+      ],
+      "name": "GitHubStaking__UnsuccessfullTransfer",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "GitHubStaking__WrongSolverError",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "repoId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "issueId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "creator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "prize",
+          "type": "uint256"
+        }
+      ],
+      "name": "IssueCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "repoId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "issueId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "pullReqId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "creator",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "solver",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "prize",
+          "type": "uint256"
+        }
+      ],
+      "name": "IssueSolved",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "repoId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "issueId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "pullReqId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "staker",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amt",
+          "type": "uint256"
+        }
+      ],
+      "name": "StakePlaced",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "DEDUCTION_FACTOR",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "wallet",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "username",
+          "type": "string"
+        }
+      ],
+      "name": "addUserToWallet",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "repoId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "issueId",
+          "type": "uint256"
+        }
+      ],
+      "name": "closeIssueNoSolver",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "repoId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "issueId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "prize",
+          "type": "uint256"
+        }
+      ],
+      "name": "createIssue",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "staker",
+          "type": "address"
+        }
+      ],
+      "name": "getBasicWalletDetails",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "gitUsername",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lostStakeCount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "wonStakeCount",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getCurrentPrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "total",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amt",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "count",
+          "type": "uint256"
+        }
+      ],
+      "name": "getDeductionRate",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "repoId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "issueId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "approx_amt",
+          "type": "uint256"
+        }
+      ],
+      "name": "getEstDeductionRateOnIssue",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "ethAmt",
+          "type": "uint256"
+        }
+      ],
+      "name": "getGSTValueForETHValue",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "repoId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "issueId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getIssue",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "creator",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "prize",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "solved",
+          "type": "bool"
+        },
+        {
+          "internalType": "address",
+          "name": "solver",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "stakeCount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalStakeAmt",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "repoId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getIssueCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "staker",
+          "type": "address"
+        }
+      ],
+      "name": "getIssueStats",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "totalPriceAmt_SetByMe",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "openPriceAmt_SetByMe",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalIssues_SetByMe",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "openIssues_SetByMe",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "staker",
+          "type": "address"
+        }
+      ],
+      "name": "getRewardsWalletDetails",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "rewardsEarned",
+          "type": "uint256"
+        },
+        {
+          "internalType": "int256",
+          "name": "withdraw_proceedings",
+          "type": "int256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lost_refund",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getSoldTokens",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "repoId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "issueId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getStake",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "pullReqIndex",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "pullReqId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "staker",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amt",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "repoId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "issueId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getStakeCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "staker",
+          "type": "address"
+        }
+      ],
+      "name": "getStakingWalletDetails",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "totalAmtStaked",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "openAmtStaked",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalStakes",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "openStakes",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTotalDeductions",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTotalRiased",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "repoId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "issueId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getTotalStakeAmount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "i_owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "repoId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "issueId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "pullReqIndex",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "pullReqId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "solver",
+          "type": "address"
+        }
+      ],
+      "name": "markSolved",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "repos",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "issueCount",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "ethAmt",
+          "type": "uint256"
+        }
+      ],
+      "name": "requestTokens",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "s_token",
+      "outputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "repoId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "issueId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "pullReqId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amt",
+          "type": "uint256"
+        }
+      ],
+      "name": "stakeOnIssue",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "wallet",
+          "type": "address"
+        }
+      ],
+      "name": "updateAccessedFreeTokens",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "wallets",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "gitUsername",
+          "type": "string"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "lostStakeCount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "wonStakeCount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "totalAmtStaked",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "openAmtStaked",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "totalStakes",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "openStakes",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rewardsEarned",
+              "type": "uint256"
+            },
+            {
+              "internalType": "int256",
+              "name": "withdraw_proceedings",
+              "type": "int256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "lost_refund",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct GitHubStaking.WalletStats",
+          "name": "stats",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "totalPriceAmt_SetByMe",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "openPriceAmt_SetByMe",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "totalIssues_SetByMe",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "openIssues_SetByMe",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct GitHubStaking.IssueStats",
+          "name": "issueStats",
+          "type": "tuple"
+        },
+        {
+          "internalType": "bool",
+          "name": "accessedFreeTokens",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "repoId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "issueId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "pullReqIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdrawStake",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "withdraw_reward",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x36fdec702d77df94f0035d30ef5b36b517e8cb8ff4edb02690037a62c2c52f2f",
+  "receipt": {
+    "to": null,
+    "from": "0xBD23fF24cd87001E70cBaB9DC8d55798ABe94F0B",
+    "contractAddress": "0x20C9c54bd86C309d3Cc71Ba73BcA701711dEC5bC",
+    "transactionIndex": 0,
+    "gasUsed": "3428899",
+    "logsBloom": "0x00000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000800000000000000000080100000000000000000000000000000000000000000000000000000000040080000000000000000000000000000000400000000000000000000000000000000800000000000000200000000000000000008000000000000000000000000000000000000000004000000000000000000001000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000100000",
+    "blockHash": "0xee2584a58121905702e2125acb2546ee56f69a0c59afadc8e9ac280a6e526b2f",
+    "transactionHash": "0x36fdec702d77df94f0035d30ef5b36b517e8cb8ff4edb02690037a62c2c52f2f",
+    "logs": [
+      {
+        "transactionIndex": 0,
+        "blockNumber": 13375027,
+        "transactionHash": "0x36fdec702d77df94f0035d30ef5b36b517e8cb8ff4edb02690037a62c2c52f2f",
+        "address": "0x0000000000000000000000000000000000001010",
+        "topics": [
+          "0x4dfe1bbbcf077ddc3e01291eea2d5c70c2b422b415d95645b9adcfd678cb1d63",
+          "0x0000000000000000000000000000000000000000000000000000000000001010",
+          "0x000000000000000000000000bd23ff24cd87001e70cbab9dc8d55798abe94f0b",
+          "0x0000000000000000000000006c095a53250dd250797ff915a716cca690ad8842"
+        ],
+        "data": "0x000000000000000000000000000000000000000000000000018140a20f8fd4b30000000000000000000000000000000000000000000000000918187f1c78d0000000000000000000000000000000000000000000000000cef052b28e438914cd0000000000000000000000000000000000000000000000000796d7dd0ce8fb4d0000000000000000000000000000000000000000000000cef1d3f3305318e980",
+        "logIndex": 0,
+        "blockHash": "0xee2584a58121905702e2125acb2546ee56f69a0c59afadc8e9ac280a6e526b2f"
+      }
+    ],
+    "blockNumber": 13375027,
+    "cumulativeGasUsed": "3428899",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0x72ebf177e18f3CBa29a82aE50c3Ee24b12dfeAB3"
+  ],
+  "numDeployments": 1,
+  "solcInputHash": "267de5fd9a276f75ab27f06317c4e8da",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.24+commit.e11b9ed9\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"GitHubStaking__CannotDeclareYourselfWinner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GitHubStaking__CreatorRightsOnly\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GitHubStaking__DeductionError\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GitHubStaking__IssueAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GitHubStaking__IssueAlreadySolved\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GitHubStaking__IssueCreatorCannotStake\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"repoId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"issueId\",\"type\":\"uint256\"}],\"name\":\"GitHubStaking__IssueDoesNotExist\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GitHubStaking__IssueHasStakers\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GitHubStaking__MinAllowedBalanceReached\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GitHubStaking__MinPrizeRequired\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GitHubStaking__MinStakeAmtRequired\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GitHubStaking__NoWithdrawals\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GitHubStaking__NotEnoughETHSent\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"}],\"name\":\"GitHubStaking__UnsuccessfullTransfer\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GitHubStaking__WrongSolverError\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"repoId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"issueId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"prize\",\"type\":\"uint256\"}],\"name\":\"IssueCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"repoId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"issueId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"pullReqId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"solver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"prize\",\"type\":\"uint256\"}],\"name\":\"IssueSolved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"repoId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"issueId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"pullReqId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"staker\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amt\",\"type\":\"uint256\"}],\"name\":\"StakePlaced\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEDUCTION_FACTOR\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"wallet\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"username\",\"type\":\"string\"}],\"name\":\"addUserToWallet\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"repoId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"issueId\",\"type\":\"uint256\"}],\"name\":\"closeIssueNoSolver\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"repoId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"issueId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"prize\",\"type\":\"uint256\"}],\"name\":\"createIssue\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"staker\",\"type\":\"address\"}],\"name\":\"getBasicWalletDetails\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"gitUsername\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"lostStakeCount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"wonStakeCount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getCurrentPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"total\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amt\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"getDeductionRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"repoId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"issueId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"approx_amt\",\"type\":\"uint256\"}],\"name\":\"getEstDeductionRateOnIssue\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"ethAmt\",\"type\":\"uint256\"}],\"name\":\"getGSTValueForETHValue\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"repoId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"issueId\",\"type\":\"uint256\"}],\"name\":\"getIssue\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"prize\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"solved\",\"type\":\"bool\"},{\"internalType\":\"address\",\"name\":\"solver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"stakeCount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalStakeAmt\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"repoId\",\"type\":\"uint256\"}],\"name\":\"getIssueCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"staker\",\"type\":\"address\"}],\"name\":\"getIssueStats\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"totalPriceAmt_SetByMe\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openPriceAmt_SetByMe\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalIssues_SetByMe\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openIssues_SetByMe\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"staker\",\"type\":\"address\"}],\"name\":\"getRewardsWalletDetails\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"rewardsEarned\",\"type\":\"uint256\"},{\"internalType\":\"int256\",\"name\":\"withdraw_proceedings\",\"type\":\"int256\"},{\"internalType\":\"uint256\",\"name\":\"lost_refund\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSoldTokens\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"repoId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"issueId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getStake\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"pullReqIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"pullReqId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"staker\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amt\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"repoId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"issueId\",\"type\":\"uint256\"}],\"name\":\"getStakeCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"staker\",\"type\":\"address\"}],\"name\":\"getStakingWalletDetails\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"totalAmtStaked\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openAmtStaked\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalStakes\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openStakes\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalDeductions\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalRiased\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"repoId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"issueId\",\"type\":\"uint256\"}],\"name\":\"getTotalStakeAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"i_owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"repoId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"issueId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"pullReqIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"pullReqId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"solver\",\"type\":\"address\"}],\"name\":\"markSolved\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"repos\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"issueCount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"ethAmt\",\"type\":\"uint256\"}],\"name\":\"requestTokens\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"s_token\",\"outputs\":[{\"internalType\":\"contract IERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"repoId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"issueId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"pullReqId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amt\",\"type\":\"uint256\"}],\"name\":\"stakeOnIssue\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"wallet\",\"type\":\"address\"}],\"name\":\"updateAccessedFreeTokens\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"wallets\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"gitUsername\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"lostStakeCount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"wonStakeCount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalAmtStaked\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openAmtStaked\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalStakes\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openStakes\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rewardsEarned\",\"type\":\"uint256\"},{\"internalType\":\"int256\",\"name\":\"withdraw_proceedings\",\"type\":\"int256\"},{\"internalType\":\"uint256\",\"name\":\"lost_refund\",\"type\":\"uint256\"}],\"internalType\":\"struct GitHubStaking.WalletStats\",\"name\":\"stats\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"totalPriceAmt_SetByMe\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openPriceAmt_SetByMe\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalIssues_SetByMe\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openIssues_SetByMe\",\"type\":\"uint256\"}],\"internalType\":\"struct GitHubStaking.IssueStats\",\"name\":\"issueStats\",\"type\":\"tuple\"},{\"internalType\":\"bool\",\"name\":\"accessedFreeTokens\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"repoId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"issueId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"pullReqIndex\",\"type\":\"uint256\"}],\"name\":\"withdrawStake\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"withdraw_reward\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/GitHubStaking.sol\":\"GitHubStaking\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.0) (token/ERC20/IERC20.sol)\\n\\npragma solidity ^0.8.20;\\n\\n/**\\n * @dev Interface of the ERC20 standard as defined in the EIP.\\n */\\ninterface IERC20 {\\n    /**\\n     * @dev Emitted when `value` tokens are moved from one account (`from`) to\\n     * another (`to`).\\n     *\\n     * Note that `value` may be zero.\\n     */\\n    event Transfer(address indexed from, address indexed to, uint256 value);\\n\\n    /**\\n     * @dev Emitted when the allowance of a `spender` for an `owner` is set by\\n     * a call to {approve}. `value` is the new allowance.\\n     */\\n    event Approval(address indexed owner, address indexed spender, uint256 value);\\n\\n    /**\\n     * @dev Returns the value of tokens in existence.\\n     */\\n    function totalSupply() external view returns (uint256);\\n\\n    /**\\n     * @dev Returns the value of tokens owned by `account`.\\n     */\\n    function balanceOf(address account) external view returns (uint256);\\n\\n    /**\\n     * @dev Moves a `value` amount of tokens from the caller's account to `to`.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transfer(address to, uint256 value) external returns (bool);\\n\\n    /**\\n     * @dev Returns the remaining number of tokens that `spender` will be\\n     * allowed to spend on behalf of `owner` through {transferFrom}. This is\\n     * zero by default.\\n     *\\n     * This value changes when {approve} or {transferFrom} are called.\\n     */\\n    function allowance(address owner, address spender) external view returns (uint256);\\n\\n    /**\\n     * @dev Sets a `value` amount of tokens as the allowance of `spender` over the\\n     * caller's tokens.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * IMPORTANT: Beware that changing an allowance with this method brings the risk\\n     * that someone may use both the old and the new allowance by unfortunate\\n     * transaction ordering. One possible solution to mitigate this race\\n     * condition is to first reduce the spender's allowance to 0 and set the\\n     * desired value afterwards:\\n     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729\\n     *\\n     * Emits an {Approval} event.\\n     */\\n    function approve(address spender, uint256 value) external returns (bool);\\n\\n    /**\\n     * @dev Moves a `value` amount of tokens from `from` to `to` using the\\n     * allowance mechanism. `value` is then deducted from the caller's\\n     * allowance.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transferFrom(address from, address to, uint256 value) external returns (bool);\\n}\\n\",\"keccak256\":\"0xc6a8ff0ea489379b61faa647490411b80102578440ab9d84e9a957cc12164e70\",\"license\":\"MIT\"},\"contracts/GitHubStaking.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.2;\\n\\nimport \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\n\\nerror GitHubStaking__UnsuccessfullTransfer(address from, address to);\\nerror GitHubStaking__MinPrizeRequired();\\nerror GitHubStaking__MinAllowedBalanceReached();\\nerror GitHubStaking__MinStakeAmtRequired();\\nerror GitHubStaking__IssueAlreadyExists();\\nerror GitHubStaking__IssueCreatorCannotStake();\\nerror GitHubStaking__IssueDoesNotExist(uint repoId, uint issueId);\\nerror GitHubStaking__IssueAlreadySolved();\\nerror GitHubStaking__IssueHasStakers();\\nerror GitHubStaking__CannotDeclareYourselfWinner();\\nerror GitHubStaking__CreatorRightsOnly();\\nerror GitHubStaking__WrongSolverError();\\nerror GitHubStaking__DeductionError();\\nerror GitHubStaking__NoWithdrawals();\\nerror GitHubStaking__NotEnoughETHSent();\\n\\ncontract GitHubStaking {\\n    struct Stake {\\n        address staker;\\n        uint amt;\\n        uint pullReqId;\\n    }\\n    struct Issue {\\n        address creator;\\n        uint prize;\\n        bool solved;\\n        address solver;\\n        uint stakeCount;\\n        uint totalStakeAmt;\\n        mapping(uint => Stake) stakes; // index -> konsa address, kitna stakeAmt\\n    }\\n\\n    struct Repo {\\n        mapping(uint => Issue) issues;\\n        uint issueCount;\\n    }\\n    struct WalletStats {\\n        uint lostStakeCount;\\n        uint wonStakeCount;\\n        uint totalAmtStaked;\\n        uint openAmtStaked;\\n        uint totalStakes;\\n        uint openStakes;\\n        uint rewardsEarned;\\n        int withdraw_proceedings;\\n        uint lost_refund;\\n    }\\n\\n    struct IssueStats {\\n        uint totalPriceAmt_SetByMe;\\n        uint openPriceAmt_SetByMe;\\n        uint totalIssues_SetByMe;\\n        uint openIssues_SetByMe;\\n    }\\n\\n    struct Wallet {\\n        string gitUsername;\\n        WalletStats stats;\\n        IssueStats issueStats;\\n        bool accessedFreeTokens;\\n    }\\n\\n    event IssueCreated(\\n        uint256 indexed repoId,\\n        uint256 indexed issueId,\\n        address indexed creator,\\n        uint256 prize\\n    );\\n\\n    event IssueSolved(\\n        uint256 indexed repoId,\\n        uint256 indexed issueId,\\n        uint256 pullReqId,\\n        address creator,\\n        address indexed solver,\\n        uint256 prize\\n    );\\n\\n    event StakePlaced(\\n        uint256 indexed repoId,\\n        uint256 indexed issueId,\\n        uint256 index,\\n        uint256 pullReqId,\\n        address indexed staker,\\n        uint256 amt\\n    );\\n\\n    mapping(uint => Repo) public repos; // RepoId -> Repo\\n    mapping(address => Wallet) public wallets;\\n\\n    uint256 private constant MIN_PRIZE = 5;\\n    uint256 private constant MIN_STAKE = 5;\\n\\n    uint public DEDUCTION_FACTOR = 0.1 ether;\\n    uint private TOTAL_DEDUCTIONS = 0;\\n    uint private SOLD_TOKENS = 0;\\n    uint private TOTAL_RAISED = 0;\\n    uint private RATE = 0.003 ether;\\n    uint private constant k = 0.0000001 ether;\\n\\n    IERC20 public s_token;\\n    address public immutable i_owner;\\n\\n    constructor(address token) {\\n        s_token = IERC20(token);\\n        i_owner = msg.sender;\\n    }\\n\\n    function addUserToWallet(address wallet, string memory username) external {\\n        wallets[wallet].gitUsername = username;\\n    }\\n\\n    function updateAccessedFreeTokens(address wallet) external {\\n        wallets[wallet].accessedFreeTokens = true;\\n    }\\n\\n    function getCurrentPrice() public view returns (uint256) {\\n        return RATE + k * (SOLD_TOKENS ** 2);\\n    }\\n\\n    function getTotalRiased() external view returns (uint256) {\\n        return TOTAL_RAISED;\\n    }\\n\\n    function getGSTValueForETHValue(\\n        uint ethAmt\\n    ) external view returns (uint256) {\\n        uint tokenPrice = getCurrentPrice();\\n        uint tokenAmount = ethAmt / tokenPrice;\\n        return tokenAmount;\\n    }\\n\\n    function requestTokens(uint ethAmt) external payable {\\n        uint256 tokenPrice = getCurrentPrice();\\n        if (ethAmt <= tokenPrice) {\\n            revert GitHubStaking__NotEnoughETHSent();\\n        }\\n        uint256 tokenAmount = ethAmt / tokenPrice;\\n\\n        bool success = s_token.transfer(msg.sender, tokenAmount);\\n        if (!success) {\\n            revert GitHubStaking__UnsuccessfullTransfer(\\n                address(this),\\n                msg.sender\\n            );\\n        }\\n        SOLD_TOKENS = SOLD_TOKENS + tokenAmount;\\n        TOTAL_RAISED += ethAmt;\\n    }\\n\\n    function createIssue(\\n        uint repoId,\\n        uint issueId,\\n        uint256 prize\\n    ) external payable {\\n        // require(\\n        //     wallets[msg.sender].gitUsername != \\\"\\\",\\n        //     \\\"Wallet not found in contract.\\\"\\n        // );\\n\\n        if (prize < MIN_PRIZE) {\\n            revert GitHubStaking__MinPrizeRequired();\\n        }\\n        Repo storage repo = repos[repoId];\\n        Issue storage issue = repo.issues[issueId];\\n\\n        if (issue.creator != address(0)) {\\n            revert GitHubStaking__IssueAlreadyExists();\\n        }\\n\\n        bool success = s_token.transferFrom(msg.sender, address(this), prize);\\n        if (success) {\\n            issue.creator = msg.sender;\\n            issue.prize = prize;\\n            issue.solved = false;\\n            issue.solver = address(0);\\n            issue.stakeCount = 0;\\n            issue.totalStakeAmt = 0;\\n            repo.issueCount++;\\n\\n            Wallet storage wallet = wallets[msg.sender];\\n\\n            IssueStats storage issueStats = wallet.issueStats;\\n\\n            issueStats.totalIssues_SetByMe++;\\n            issueStats.openIssues_SetByMe++;\\n            issueStats.totalPriceAmt_SetByMe += prize;\\n            issueStats.openPriceAmt_SetByMe += prize;\\n\\n            emit IssueCreated(repoId, issueId, msg.sender, prize);\\n        } else {\\n            revert GitHubStaking__UnsuccessfullTransfer(\\n                msg.sender,\\n                address(this)\\n            );\\n        }\\n    }\\n\\n    // Stake an amount on an issue\\n    function stakeOnIssue(\\n        uint repoId,\\n        uint issueId,\\n        uint pullReqId,\\n        uint256 amt\\n    ) external payable {\\n        int withdrawAmt = wallets[msg.sender].stats.withdraw_proceedings;\\n\\n        if (withdrawAmt < 0) {\\n            uint balance = s_token.balanceOf(msg.sender) - amt;\\n            if (balance - uint(-withdrawAmt) < (balance * 30) / 100) {\\n                revert GitHubStaking__MinAllowedBalanceReached();\\n            }\\n        }\\n\\n        if (amt < MIN_STAKE) {\\n            revert GitHubStaking__MinStakeAmtRequired();\\n        }\\n        Issue storage issue = repos[repoId].issues[issueId];\\n\\n        if (issue.creator == msg.sender) {\\n            revert GitHubStaking__IssueCreatorCannotStake();\\n        }\\n        if (issue.creator == address(0)) {\\n            revert GitHubStaking__IssueDoesNotExist(repoId, issueId);\\n        }\\n        if (issue.solved) {\\n            revert GitHubStaking__IssueAlreadySolved();\\n        }\\n\\n        bool success = s_token.transferFrom(msg.sender, address(this), amt);\\n        if (success) {\\n            issue.stakeCount++;\\n            Stake storage newStake = issue.stakes[issue.stakeCount];\\n            newStake.pullReqId = pullReqId;\\n            newStake.staker = msg.sender;\\n            newStake.amt = amt;\\n\\n            issue.totalStakeAmt += amt;\\n\\n            WalletStats storage walletstats = wallets[msg.sender].stats;\\n\\n            walletstats.totalAmtStaked += amt;\\n            walletstats.openAmtStaked += amt;\\n\\n            walletstats.totalStakes++;\\n            walletstats.openStakes++;\\n            emit StakePlaced(\\n                repoId,\\n                issueId,\\n                issue.stakeCount,\\n                pullReqId,\\n                msg.sender,\\n                amt\\n            );\\n        } else {\\n            revert GitHubStaking__UnsuccessfullTransfer(\\n                msg.sender,\\n                address(this)\\n            );\\n        }\\n    }\\n\\n    function closeIssueNoSolver(uint repoId, uint issueId) external payable {\\n        Issue storage issue = repos[repoId].issues[issueId];\\n        if (issue.creator == address(0)) {\\n            revert GitHubStaking__IssueDoesNotExist(repoId, issueId);\\n        }\\n        if (issue.stakeCount != 0) {\\n            revert GitHubStaking__IssueHasStakers();\\n        }\\n        if (issue.solved) {\\n            revert GitHubStaking__IssueAlreadySolved();\\n        }\\n        issue.solved = true;\\n        bool success = s_token.transfer(issue.creator, issue.prize);\\n        if (!success) {\\n            revert GitHubStaking__UnsuccessfullTransfer(\\n                address(this),\\n                issue.creator\\n            );\\n        }\\n    }\\n\\n    function markSolved(\\n        uint repoId,\\n        uint issueId,\\n        uint pullReqIndex,\\n        uint pullReqId,\\n        address solver\\n    ) external payable {\\n        if (msg.sender == solver) {\\n            revert GitHubStaking__CannotDeclareYourselfWinner();\\n        }\\n\\n        Issue storage issue = repos[repoId].issues[issueId];\\n\\n        if (issue.solved) {\\n            revert GitHubStaking__IssueAlreadySolved();\\n        }\\n\\n        if (msg.sender != issue.creator) {\\n            revert GitHubStaking__CreatorRightsOnly();\\n        }\\n\\n        Stake storage stake = issue.stakes[pullReqIndex];\\n\\n        if (stake.staker != solver && stake.pullReqId != pullReqId) {\\n            revert GitHubStaking__WrongSolverError();\\n        }\\n\\n        updateWalletForSolver(solver, issue.prize, stake.amt);\\n\\n        issue.solved = true;\\n        issue.solver = solver;\\n\\n        IssueStats storage senderIssueStats = wallets[msg.sender].issueStats;\\n        IssueStats storage creatorIssueStats = wallets[issue.creator]\\n            .issueStats;\\n\\n        senderIssueStats.totalIssues_SetByMe++;\\n        senderIssueStats.openIssues_SetByMe++;\\n        creatorIssueStats.openPriceAmt_SetByMe -= issue.prize;\\n        creatorIssueStats.openIssues_SetByMe--;\\n\\n        if (issue.stakeCount > 1) {\\n            rejectOthers(repoId, issueId, pullReqIndex, solver);\\n        }\\n\\n        emit IssueSolved(\\n            repoId,\\n            issueId,\\n            pullReqId,\\n            msg.sender,\\n            solver,\\n            issue.prize\\n        );\\n    }\\n\\n    function updateWalletForSolver(\\n        address solver,\\n        uint prize,\\n        uint stakedAmt\\n    ) internal {\\n        WalletStats storage walletstats = wallets[solver].stats;\\n        walletstats.wonStakeCount++;\\n        walletstats.rewardsEarned += prize;\\n        walletstats.withdraw_proceedings += int(prize);\\n        walletstats.openStakes--;\\n        walletstats.openAmtStaked -= stakedAmt;\\n    }\\n\\n    function rejectOthers(\\n        uint repoId,\\n        uint issueId,\\n        uint pullReqIndex, // won\\n        address solver\\n    ) internal {\\n        Issue storage issue = repos[repoId].issues[issueId];\\n\\n        for (uint i = 1; i <= issue.stakeCount; i++) {\\n            address staker = issue.stakes[i].staker;\\n\\n            if (staker == address(0)) {\\n                continue;\\n            }\\n\\n            if (staker == solver && pullReqIndex == i) {\\n                continue; //skip solver\\n            }\\n            uint amount = issue.stakes[i].amt;\\n            WalletStats storage walletstats = wallets[staker].stats;\\n            walletstats.openAmtStaked -= amount;\\n\\n            uint df = getDeductionRate(\\n                issue.totalStakeAmt,\\n                amount,\\n                issue.stakeCount\\n            );\\n            uint deduction = amount - df;\\n            uint refund = amount - deduction;\\n\\n            TOTAL_DEDUCTIONS += deduction;\\n\\n            if (refund >= amount) {\\n                revert GitHubStaking__DeductionError();\\n            }\\n            walletstats.openStakes--;\\n            walletstats.lostStakeCount++;\\n            walletstats.lost_refund += refund;\\n            walletstats.withdraw_proceedings -= int(refund);\\n        }\\n    }\\n\\n    function withdrawStake(\\n        uint repoId,\\n        uint issueId,\\n        uint pullReqIndex\\n    ) external payable {\\n        Issue storage issue = repos[repoId].issues[issueId];\\n        Stake storage stake = issue.stakes[pullReqIndex];\\n\\n        if (stake.staker != msg.sender) {\\n            revert GitHubStaking__CreatorRightsOnly();\\n        }\\n\\n        if (issue.solved) {\\n            revert GitHubStaking__IssueAlreadySolved();\\n        }\\n\\n        bool success = s_token.transfer(msg.sender, stake.amt);\\n        if (!success) {\\n            revert GitHubStaking__UnsuccessfullTransfer(\\n                address(this),\\n                msg.sender\\n            );\\n        }\\n        issue.stakeCount--;\\n        issue.totalStakeAmt -= stake.amt;\\n\\n        WalletStats storage walletstats = wallets[msg.sender].stats;\\n        walletstats.totalAmtStaked -= stake.amt;\\n        walletstats.openAmtStaked -= stake.amt;\\n        walletstats.openStakes--;\\n        walletstats.totalStakes--;\\n    }\\n\\n    // Withdraw refund balance\\n    function withdraw_reward() external payable {\\n        WalletStats storage walletstats = wallets[msg.sender].stats;\\n        int amount = walletstats.withdraw_proceedings;\\n\\n        if (amount <= 0) {\\n            revert GitHubStaking__NoWithdrawals();\\n        }\\n\\n        walletstats.withdraw_proceedings = 0;\\n        bool success = s_token.transfer(msg.sender, uint(amount));\\n        if (!success) {\\n            revert GitHubStaking__UnsuccessfullTransfer(\\n                address(this),\\n                msg.sender\\n            );\\n        }\\n    }\\n\\n    function getBasicWalletDetails(\\n        address staker\\n    )\\n        external\\n        view\\n        returns (\\n            string memory gitUsername,\\n            uint lostStakeCount,\\n            uint wonStakeCount\\n        )\\n    {\\n        Wallet storage wallet = wallets[staker];\\n        return (\\n            wallet.gitUsername,\\n            wallet.stats.lostStakeCount,\\n            wallet.stats.wonStakeCount\\n        );\\n    }\\n\\n    function getStakingWalletDetails(\\n        address staker\\n    )\\n        external\\n        view\\n        returns (\\n            uint totalAmtStaked,\\n            uint openAmtStaked,\\n            uint totalStakes,\\n            uint openStakes\\n        )\\n    {\\n        Wallet storage wallet = wallets[staker];\\n        return (\\n            wallet.stats.totalAmtStaked,\\n            wallet.stats.openAmtStaked,\\n            wallet.stats.totalStakes,\\n            wallet.stats.openStakes\\n        );\\n    }\\n\\n    function getRewardsWalletDetails(\\n        address staker\\n    )\\n        external\\n        view\\n        returns (uint rewardsEarned, int withdraw_proceedings, uint lost_refund)\\n    {\\n        Wallet storage wallet = wallets[staker];\\n        return (\\n            wallet.stats.rewardsEarned,\\n            wallet.stats.withdraw_proceedings,\\n            wallet.stats.lost_refund\\n        );\\n    }\\n\\n    function getIssueStats(\\n        address staker\\n    )\\n        external\\n        view\\n        returns (\\n            uint totalPriceAmt_SetByMe,\\n            uint openPriceAmt_SetByMe,\\n            uint totalIssues_SetByMe,\\n            uint openIssues_SetByMe\\n        )\\n    {\\n        Wallet storage wallet = wallets[staker];\\n        return (\\n            wallet.issueStats.totalPriceAmt_SetByMe,\\n            wallet.issueStats.openPriceAmt_SetByMe,\\n            wallet.issueStats.totalIssues_SetByMe,\\n            wallet.issueStats.openIssues_SetByMe\\n        );\\n    }\\n\\n    function getTotalStakeAmount(\\n        uint repoId,\\n        uint issueId\\n    ) external view returns (uint256) {\\n        return repos[repoId].issues[issueId].totalStakeAmt;\\n    }\\n\\n    function getIssue(\\n        uint repoId,\\n        uint issueId\\n    )\\n        external\\n        view\\n        returns (\\n            address creator,\\n            uint prize,\\n            bool solved,\\n            address solver,\\n            uint stakeCount,\\n            uint totalStakeAmt\\n        )\\n    {\\n        Issue storage issue = repos[repoId].issues[issueId];\\n        if (issue.creator == address(0)) {\\n            revert GitHubStaking__IssueDoesNotExist(repoId, issueId);\\n        }\\n        return (\\n            issue.creator,\\n            issue.prize,\\n            issue.solved,\\n            issue.solver,\\n            issue.stakeCount,\\n            issue.totalStakeAmt\\n        );\\n    }\\n\\n    function getStakeCount(\\n        uint repoId,\\n        uint issueId\\n    ) external view returns (uint) {\\n        return repos[repoId].issues[issueId].stakeCount;\\n    }\\n\\n    function getIssueCount(uint repoId) external view returns (uint) {\\n        Repo storage repo = repos[repoId];\\n        return repo.issueCount;\\n    }\\n\\n    function getStake(\\n        uint repoId,\\n        uint issueId,\\n        uint index\\n    )\\n        external\\n        view\\n        returns (uint pullReqIndex, uint pullReqId, address staker, uint amt)\\n    {\\n        Issue storage issue = repos[repoId].issues[issueId];\\n        Stake storage stake = issue.stakes[index];\\n        if (issue.creator == address(0)) {\\n            revert GitHubStaking__IssueDoesNotExist(repoId, issueId);\\n        }\\n        return (index, stake.pullReqId, stake.staker, stake.amt);\\n    }\\n\\n    function getDeductionRate(\\n        uint total,\\n        uint amt,\\n        uint count\\n    ) public pure returns (uint) {\\n        // uint df = ((amt / count) * DEDUCTION_FACTOR) + ((total - amt) / count);\\n        uint df;\\n        uint ratio = total / count;\\n        if (ratio >= 25) {\\n            df = 25;\\n        } else {\\n            df = ratio;\\n        }\\n        uint damt = ((amt * df) / 100);\\n        return damt;\\n    }\\n\\n    function getEstDeductionRateOnIssue(\\n        uint repoId,\\n        uint issueId,\\n        uint approx_amt\\n    ) external view returns (uint) {\\n        Issue storage issue = repos[repoId].issues[issueId];\\n        uint df = getDeductionRate(\\n            (issue.totalStakeAmt + approx_amt),\\n            approx_amt,\\n            issue.stakeCount + 1\\n        );\\n        return df;\\n    }\\n\\n    function getSoldTokens() external view returns (uint) {\\n        return SOLD_TOKENS;\\n    }\\n\\n    function getTotalDeductions() external view returns (uint) {\\n        if (msg.sender != i_owner) {\\n            revert GitHubStaking__CreatorRightsOnly();\\n        }\\n        return TOTAL_DEDUCTIONS;\\n    }\\n}\\n\",\"keccak256\":\"0x67fedf6fdeebf8f1540a692d48b21d19899f736affd6c20af4ebabb9b0e5ac1e\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x60a060405267016345785d8a0000600255600060035560006004556000600555660aa87bee5380006006553480156200003757600080fd5b5060405162003d7438038062003d7483398181016040528101906200005d919062000143565b80600760006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055503373ffffffffffffffffffffffffffffffffffffffff1660808173ffffffffffffffffffffffffffffffffffffffff16815250505062000175565b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b60006200010b82620000de565b9050919050565b6200011d81620000fe565b81146200012957600080fd5b50565b6000815190506200013d8162000112565b92915050565b6000602082840312156200015c576200015b620000d9565b5b60006200016c848285016200012c565b91505092915050565b608051613bdc6200019860003960008181610f1101526116b10152613bdc6000f3fe6080604052600436106101cd5760003560e01c8063d7b16b18116100f7578063eb7c6d0211610095578063f2435c0211610064578063f2435c02146106ac578063f55ddd06146106c8578063fc0a8a9a14610705578063fecf0fdd1461072e576101cd565b8063eb7c6d02146105fb578063eb7fa13a1461063a578063eb91d37e14610665578063eef9c27c14610690576101cd565b8063e80ba91d116100d1578063e80ba91d14610556578063e9a7897e14610572578063e9af88e51461057c578063eb02b3a1146105b9576101cd565b8063d7b16b18146104cf578063dba6335f146104eb578063dd6c3a4f14610516576101cd565b806365156b311161016f5780639b403afb1161013e5780639b403afb146103fe578063a534130f1461043e578063a6ceaeb81461047b578063c7515837146104a6576101cd565b806365156b311461032b5780636df3c06d146103565780636e7ee67a1461039357806389b08f11146103be576101cd565b806329729a76116101ab57806329729a7614610249578063434dcdeb146102865780634e28e00f146102c3578063603474c314610300576101cd565b80630b121c04146101d2578063198af150146101ee578063279f9b111461022d575b600080fd5b6101ec60048036038101906101e79190612aea565b61076e565b005b3480156101fa57600080fd5b5061021560048036038101906102109190612b9b565b610b3c565b60405161022493929190612bf0565b60405180910390f35b61024760048036038101906102429190612aea565b610ba9565b005b34801561025557600080fd5b50610270600480360381019061026b9190612c27565b610ea4565b60405161027d9190612c54565b60405180910390f35b34801561029257600080fd5b506102ad60048036038101906102a89190612c27565b610ecb565b6040516102ba9190612c54565b60405180910390f35b3480156102cf57600080fd5b506102ea60048036038101906102e59190612c27565b610ee9565b6040516102f79190612c54565b60405180910390f35b34801561030c57600080fd5b50610315610f0d565b6040516103229190612c54565b60405180910390f35b34801561033757600080fd5b50610340610f9c565b60405161034d9190612cce565b60405180910390f35b34801561036257600080fd5b5061037d60048036038101906103789190612aea565b610fc2565b60405161038a9190612c54565b60405180910390f35b34801561039f57600080fd5b506103a8611013565b6040516103b59190612c54565b60405180910390f35b3480156103ca57600080fd5b506103e560048036038101906103e09190612b9b565b61101d565b6040516103f59493929190612ebe565b60405180910390f35b34801561040a57600080fd5b5061042560048036038101906104209190612b9b565b611179565b6040516104359493929190612f0d565b60405180910390f35b34801561044a57600080fd5b5061046560048036038101906104609190612f52565b6111f2565b6040516104729190612c54565b60405180910390f35b34801561048757600080fd5b50610490611226565b60405161049d9190612c54565b60405180910390f35b3480156104b257600080fd5b506104cd60048036038101906104c89190612b9b565b611230565b005b6104e960048036038101906104e49190612f92565b61128d565b005b3480156104f757600080fd5b506105006116af565b60405161050d919061301c565b60405180910390f35b34801561052257600080fd5b5061053d60048036038101906105389190612b9b565b6116d3565b60405161054d9493929190612f0d565b60405180910390f35b610570600480360381019061056b9190612f52565b61174c565b005b61057a6119eb565b005b34801561058857600080fd5b506105a3600480360381019061059e9190612f52565b611b6b565b6040516105b09190612c54565b60405180910390f35b3480156105c557600080fd5b506105e060048036038101906105db9190612f52565b611b9f565b6040516105f296959493929190613037565b60405180910390f35b34801561060757600080fd5b50610622600480360381019061061d9190612b9b565b611ceb565b60405161063193929190613098565b60405180910390f35b34801561064657600080fd5b5061064f611de1565b60405161065c9190612c54565b60405180910390f35b34801561067157600080fd5b5061067a611de7565b6040516106879190612c54565b60405180910390f35b6106aa60048036038101906106a59190612c27565b611e1a565b005b6106c660048036038101906106c191906130d6565b611f8a565b005b3480156106d457600080fd5b506106ef60048036038101906106ea9190612aea565b612568565b6040516106fc9190612c54565b60405180910390f35b34801561071157600080fd5b5061072c60048036038101906107279190613272565b6125cd565b005b34801561073a57600080fd5b5061075560048036038101906107509190612aea565b612621565b60405161076594939291906132ce565b60405180910390f35b60058110156107a9576040517fa7b49d2800000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000806000858152602001908152602001600020905060008160000160008581526020019081526020016000209050600073ffffffffffffffffffffffffffffffffffffffff168160000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614610862576040517f20af493700000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166323b872dd3330876040518463ffffffff1660e01b81526004016108c393929190613313565b6020604051808303816000875af11580156108e2573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906109069190613376565b90508015610af557338260000160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555083826001018190555060008260020160006101000a81548160ff02191690831515021790555060008260020160016101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060008260030181905550600082600401819055508260010160008154809291906109e4906133d2565b91905055506000600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000209050600081600a019050806002016000815480929190610a49906133d2565b9190505550806003016000815480929190610a63906133d2565b919050555085816000016000828254610a7c919061341a565b9250508190555085816001016000828254610a97919061341a565b925050819055503373ffffffffffffffffffffffffffffffffffffffff1687897fdbf4c4d27b5e34bbf881be7dac886bcea215531446ee302000785e7ed5fd16b489604051610ae69190612c54565b60405180910390a45050610b34565b33306040517f4c4343f3000000000000000000000000000000000000000000000000000000008152600401610b2b92919061344e565b60405180910390fd5b505050505050565b600080600080600160008673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000209050806001016006015481600101600701548260010160080154935093509350509193909250565b600080600085815260200190815260200160002060000160008481526020019081526020016000209050600081600501600084815260200190815260200160002090503373ffffffffffffffffffffffffffffffffffffffff168160000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614610c75576040517f114fa33d00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b8160020160009054906101000a900460ff1615610cbe576040517f92a7414000000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663a9059cbb3384600101546040518363ffffffff1660e01b8152600401610d21929190613477565b6020604051808303816000875af1158015610d40573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610d649190613376565b905080610daa5730336040517f4c4343f3000000000000000000000000000000000000000000000000000000008152600401610da192919061344e565b60405180910390fd5b826003016000815480929190610dbf906134a0565b91905055508160010154836004016000828254610ddc91906134c9565b925050819055506000600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060010190508260010154816002016000828254610e4191906134c9565b925050819055508260010154816003016000828254610e6091906134c9565b92505081905550806005016000815480929190610e7c906134a0565b9190505550806004016000815480929190610e96906134a0565b919050555050505050505050565b600080610eaf611de7565b905060008184610ebf919061352c565b90508092505050919050565b60006020528060005260406000206000915090508060010154905081565b60008060008084815260200190815260200160002090508060010154915050919050565b60007f000000000000000000000000000000000000000000000000000000000000000073ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614610f94576040517f114fa33d00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600354905090565b600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008060008386610fd3919061352c565b905060198110610fe65760199150610fea565b8091505b600060648387610ffa919061355d565b611004919061352c565b90508093505050509392505050565b6000600554905090565b6001602052806000526040600020600091509050806000018054611040906135ce565b80601f016020809104026020016040519081016040528092919081815260200182805461106c906135ce565b80156110b95780601f1061108e576101008083540402835291602001916110b9565b820191906000526020600020905b81548152906001019060200180831161109c57829003601f168201915b505050505090806001016040518061012001604052908160008201548152602001600182015481526020016002820154815260200160038201548152602001600482015481526020016005820154815260200160068201548152602001600782015481526020016008820154815250509080600a016040518060800160405290816000820154815260200160018201548152602001600282015481526020016003820154815250509080600e0160009054906101000a900460ff16905084565b6000806000806000600160008773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020905080600101600201548160010160030154826001016004015483600101600501549450945094509450509193509193565b6000806000848152602001908152602001600020600001600083815260200190815260200160002060040154905092915050565b6000600454905090565b60018060008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600e0160006101000a81548160ff02191690831515021790555050565b8073ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16036112f2576040517ffa2ad7cf00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000806000878152602001908152602001600020600001600086815260200190815260200160002090508060020160009054906101000a900460ff1615611365576040517f92a7414000000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b8060000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146113ee576040517f114fa33d00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600081600501600086815260200190815260200160002090508273ffffffffffffffffffffffffffffffffffffffff168160000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff161415801561146b575083816002015414155b156114a2576040517f4b90524f00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6114b58383600101548360010154612744565b60018260020160006101000a81548160ff021916908315150217905550828260020160016101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506000600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600a0190506000600160008560000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600a0190508160020160008154809291906115da906133d2565b91905055508160030160008154809291906115f4906133d2565b9190505550836001015481600101600082825461161191906134c9565b9250508190555080600301600081548092919061162d906134a0565b919050555060018460030154111561164c5761164b89898988612815565b5b8473ffffffffffffffffffffffffffffffffffffffff16888a7f13dd60dc57dccdd98cc55a56e1a70e630e2bb3da3a379c80baac65b206c15c748933896001015460405161169c939291906135ff565b60405180910390a4505050505050505050565b7f000000000000000000000000000000000000000000000000000000000000000081565b6000806000806000600160008773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020905080600a016000015481600a016001015482600a016002015483600a01600301549450945094509450509193509193565b600080600084815260200190815260200160002060000160008381526020019081526020016000209050600073ffffffffffffffffffffffffffffffffffffffff168160000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff160361180d5782826040517f954aa9d5000000000000000000000000000000000000000000000000000000008152600401611804929190613636565b60405180910390fd5b600081600301541461184b576040517f635d60cd00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b8060020160009054906101000a900460ff1615611894576040517f92a7414000000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60018160020160006101000a81548160ff0219169083151502179055506000600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663a9059cbb8360000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1684600101546040518363ffffffff1660e01b8152600401611938929190613477565b6020604051808303816000875af1158015611957573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061197b9190613376565b9050806119e557308260000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff166040517f4c4343f30000000000000000000000000000000000000000000000000000000081526004016119dc92919061344e565b60405180910390fd5b50505050565b6000600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600101905060008160070154905060008113611a74576040517f8d3d1f4700000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600082600701819055506000600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663a9059cbb33846040518363ffffffff1660e01b8152600401611add929190613477565b6020604051808303816000875af1158015611afc573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190611b209190613376565b905080611b665730336040517f4c4343f3000000000000000000000000000000000000000000000000000000008152600401611b5d92919061344e565b60405180910390fd5b505050565b6000806000848152602001908152602001600020600001600083815260200190815260200160002060030154905092915050565b60008060008060008060008060008a815260200190815260200160002060000160008981526020019081526020016000209050600073ffffffffffffffffffffffffffffffffffffffff168160000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1603611c695788886040517f954aa9d5000000000000000000000000000000000000000000000000000000008152600401611c60929190613636565b60405180910390fd5b8060000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681600101548260020160009054906101000a900460ff168360020160019054906101000a900473ffffffffffffffffffffffffffffffffffffffff1684600301548560040154965096509650965096509650509295509295509295565b60606000806000600160008673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002090508060000181600101600001548260010160010154828054611d53906135ce565b80601f0160208091040260200160405190810160405280929190818152602001828054611d7f906135ce565b8015611dcc5780601f10611da157610100808354040283529160200191611dcc565b820191906000526020600020905b815481529060010190602001808311611daf57829003601f168201915b50505050509250935093509350509193909250565b60025481565b60006002600454611df8919061379f565b64174876e800611e08919061355d565b600654611e15919061341a565b905090565b6000611e24611de7565b9050808211611e5f576040517fa445dbda00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60008183611e6d919061352c565b90506000600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663a9059cbb33846040518363ffffffff1660e01b8152600401611ece929190613477565b6020604051808303816000875af1158015611eed573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190611f119190613376565b905080611f575730336040517f4c4343f3000000000000000000000000000000000000000000000000000000008152600401611f4e92919061344e565b60405180910390fd5b81600454611f65919061341a565b6004819055508360056000828254611f7d919061341a565b9250508190555050505050565b6000600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060010160070154905060008112156120f057600082600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166370a08231336040518263ffffffff1660e01b815260040161203b919061301c565b602060405180830381865afa158015612058573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061207c91906137ff565b61208691906134c9565b90506064601e82612097919061355d565b6120a1919061352c565b826120ab9061382c565b826120b691906134c9565b10156120ee576040517fdae5a71700000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b505b600582101561212b576040517f0ba884dd00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000806000878152602001908152602001600020600001600086815260200190815260200160002090503373ffffffffffffffffffffffffffffffffffffffff168160000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16036121de576040517fb1f53bfb00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600073ffffffffffffffffffffffffffffffffffffffff168160000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16036122755785856040517f954aa9d500000000000000000000000000000000000000000000000000000000815260040161226c929190613636565b60405180910390fd5b8060020160009054906101000a900460ff16156122be576040517f92a7414000000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166323b872dd3330876040518463ffffffff1660e01b815260040161231f93929190613313565b6020604051808303816000875af115801561233e573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906123629190613376565b905080156125205781600301600081548092919061237f906133d2565b91905055506000826005016000846003015481526020019081526020016000209050858160020181905550338160000160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055508481600101819055508483600401600082825461240a919061341a565b925050819055506000600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060010190508581600201600082825461246b919061341a565b9250508190555085816003016000828254612486919061341a565b925050819055508060040160008154809291906124a2906133d2565b91905055508060050160008154809291906124bc906133d2565b91905055503373ffffffffffffffffffffffffffffffffffffffff16888a7f4598c9bac3c289413f34953ac875b77b1ee7aacd5b26155c53b15c5ea5edd8bc87600301548b8b60405161251193929190613874565b60405180910390a4505061255f565b33306040517f4c4343f300000000000000000000000000000000000000000000000000000000815260040161255692919061344e565b60405180910390fd5b50505050505050565b6000806000808681526020019081526020016000206000016000858152602001908152602001600020905060006125bf8483600401546125a8919061341a565b85600185600301546125ba919061341a565b610fc2565b905080925050509392505050565b80600160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600001908161261c9190613a4d565b505050565b60008060008060008060008981526020019081526020016000206000016000888152602001908152602001600020905060008160050160008881526020019081526020016000209050600073ffffffffffffffffffffffffffffffffffffffff168260000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16036127015788886040517f954aa9d50000000000000000000000000000000000000000000000000000000081526004016126f8929190613636565b60405180910390fd5b8681600201548260000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1683600101549550955095509550505093509350935093565b6000600160008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600101905080600101600081548092919061279f906133d2565b9190505550828160060160008282546127b8919061341a565b92505081905550828160070160008282546127d39190613b1f565b925050819055508060050160008154809291906127ef906134a0565b91905055508181600301600082825461280891906134c9565b9250508190555050505050565b6000806000868152602001908152602001600020600001600085815260200190815260200160002090506000600190505b81600301548111612a9857600082600501600083815260200190815260200160002060000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16036128c85750612a85565b8373ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff1614801561290257508185145b1561290d5750612a85565b60008360050160008481526020019081526020016000206001015490506000600160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060010190508181600301600082825461298491906134c9565b9250508190555060006129a08660040154848860030154610fc2565b9050600081846129b091906134c9565b9050600081856129c091906134c9565b905081600360008282546129d4919061341a565b92505081905550848110612a14576040517f72f1e91a00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b836005016000815480929190612a29906134a0565b9190505550836000016000815480929190612a43906133d2565b919050555080846008016000828254612a5c919061341a565b9250508190555080846007016000828254612a779190613b63565b925050819055505050505050505b8080612a90906133d2565b915050612846565b505050505050565b6000604051905090565b600080fd5b600080fd5b6000819050919050565b612ac781612ab4565b8114612ad257600080fd5b50565b600081359050612ae481612abe565b92915050565b600080600060608486031215612b0357612b02612aaa565b5b6000612b1186828701612ad5565b9350506020612b2286828701612ad5565b9250506040612b3386828701612ad5565b9150509250925092565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000612b6882612b3d565b9050919050565b612b7881612b5d565b8114612b8357600080fd5b50565b600081359050612b9581612b6f565b92915050565b600060208284031215612bb157612bb0612aaa565b5b6000612bbf84828501612b86565b91505092915050565b612bd181612ab4565b82525050565b6000819050919050565b612bea81612bd7565b82525050565b6000606082019050612c056000830186612bc8565b612c126020830185612be1565b612c1f6040830184612bc8565b949350505050565b600060208284031215612c3d57612c3c612aaa565b5b6000612c4b84828501612ad5565b91505092915050565b6000602082019050612c696000830184612bc8565b92915050565b6000819050919050565b6000612c94612c8f612c8a84612b3d565b612c6f565b612b3d565b9050919050565b6000612ca682612c79565b9050919050565b6000612cb882612c9b565b9050919050565b612cc881612cad565b82525050565b6000602082019050612ce36000830184612cbf565b92915050565b600081519050919050565b600082825260208201905092915050565b60005b83811015612d23578082015181840152602081019050612d08565b60008484015250505050565b6000601f19601f8301169050919050565b6000612d4b82612ce9565b612d558185612cf4565b9350612d65818560208601612d05565b612d6e81612d2f565b840191505092915050565b612d8281612ab4565b82525050565b612d9181612bd7565b82525050565b61012082016000820151612dae6000850182612d79565b506020820151612dc16020850182612d79565b506040820151612dd46040850182612d79565b506060820151612de76060850182612d79565b506080820151612dfa6080850182612d79565b5060a0820151612e0d60a0850182612d79565b5060c0820151612e2060c0850182612d79565b5060e0820151612e3360e0850182612d88565b50610100820151612e48610100850182612d79565b50505050565b608082016000820151612e646000850182612d79565b506020820151612e776020850182612d79565b506040820151612e8a6040850182612d79565b506060820151612e9d6060850182612d79565b50505050565b60008115159050919050565b612eb881612ea3565b82525050565b60006101e0820190508181036000830152612ed98187612d40565b9050612ee86020830186612d97565b612ef6610140830185612e4e565b612f046101c0830184612eaf565b95945050505050565b6000608082019050612f226000830187612bc8565b612f2f6020830186612bc8565b612f3c6040830185612bc8565b612f496060830184612bc8565b95945050505050565b60008060408385031215612f6957612f68612aaa565b5b6000612f7785828601612ad5565b9250506020612f8885828601612ad5565b9150509250929050565b600080600080600060a08688031215612fae57612fad612aaa565b5b6000612fbc88828901612ad5565b9550506020612fcd88828901612ad5565b9450506040612fde88828901612ad5565b9350506060612fef88828901612ad5565b925050608061300088828901612b86565b9150509295509295909350565b61301681612b5d565b82525050565b6000602082019050613031600083018461300d565b92915050565b600060c08201905061304c600083018961300d565b6130596020830188612bc8565b6130666040830187612eaf565b613073606083018661300d565b6130806080830185612bc8565b61308d60a0830184612bc8565b979650505050505050565b600060608201905081810360008301526130b28186612d40565b90506130c16020830185612bc8565b6130ce6040830184612bc8565b949350505050565b600080600080608085870312156130f0576130ef612aaa565b5b60006130fe87828801612ad5565b945050602061310f87828801612ad5565b935050604061312087828801612ad5565b925050606061313187828801612ad5565b91505092959194509250565b600080fd5b600080fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b61317f82612d2f565b810181811067ffffffffffffffff8211171561319e5761319d613147565b5b80604052505050565b60006131b1612aa0565b90506131bd8282613176565b919050565b600067ffffffffffffffff8211156131dd576131dc613147565b5b6131e682612d2f565b9050602081019050919050565b82818337600083830152505050565b6000613215613210846131c2565b6131a7565b90508281526020810184848401111561323157613230613142565b5b61323c8482856131f3565b509392505050565b600082601f8301126132595761325861313d565b5b8135613269848260208601613202565b91505092915050565b6000806040838503121561328957613288612aaa565b5b600061329785828601612b86565b925050602083013567ffffffffffffffff8111156132b8576132b7612aaf565b5b6132c485828601613244565b9150509250929050565b60006080820190506132e36000830187612bc8565b6132f06020830186612bc8565b6132fd604083018561300d565b61330a6060830184612bc8565b95945050505050565b6000606082019050613328600083018661300d565b613335602083018561300d565b6133426040830184612bc8565b949350505050565b61335381612ea3565b811461335e57600080fd5b50565b6000815190506133708161334a565b92915050565b60006020828403121561338c5761338b612aaa565b5b600061339a84828501613361565b91505092915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b60006133dd82612ab4565b91507fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff820361340f5761340e6133a3565b5b600182019050919050565b600061342582612ab4565b915061343083612ab4565b9250828201905080821115613448576134476133a3565b5b92915050565b6000604082019050613463600083018561300d565b613470602083018461300d565b9392505050565b600060408201905061348c600083018561300d565b6134996020830184612bc8565b9392505050565b60006134ab82612ab4565b9150600082036134be576134bd6133a3565b5b600182039050919050565b60006134d482612ab4565b91506134df83612ab4565b92508282039050818111156134f7576134f66133a3565b5b92915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601260045260246000fd5b600061353782612ab4565b915061354283612ab4565b925082613552576135516134fd565b5b828204905092915050565b600061356882612ab4565b915061357383612ab4565b925082820261358181612ab4565b91508282048414831517613598576135976133a3565b5b5092915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b600060028204905060018216806135e657607f821691505b6020821081036135f9576135f861359f565b5b50919050565b60006060820190506136146000830186612bc8565b613621602083018561300d565b61362e6040830184612bc8565b949350505050565b600060408201905061364b6000830185612bc8565b6136586020830184612bc8565b9392505050565b60008160011c9050919050565b6000808291508390505b60018511156136b657808604811115613692576136916133a3565b5b60018516156136a15780820291505b80810290506136af8561365f565b9450613676565b94509492505050565b6000826136cf576001905061378b565b816136dd576000905061378b565b81600181146136f357600281146136fd5761372c565b600191505061378b565b60ff84111561370f5761370e6133a3565b5b8360020a915084821115613726576137256133a3565b5b5061378b565b5060208310610133831016604e8410600b84101617156137615782820a90508381111561375c5761375b6133a3565b5b61378b565b61376e848484600161366c565b92509050818404811115613785576137846133a3565b5b81810290505b9392505050565b600060ff82169050919050565b60006137aa82612ab4565b91506137b583613792565b92506137e27fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff84846136bf565b905092915050565b6000815190506137f981612abe565b92915050565b60006020828403121561381557613814612aaa565b5b6000613823848285016137ea565b91505092915050565b600061383782612bd7565b91507f80000000000000000000000000000000000000000000000000000000000000008203613869576138686133a3565b5b816000039050919050565b60006060820190506138896000830186612bc8565b6138966020830185612bc8565b6138a36040830184612bc8565b949350505050565b60008190508160005260206000209050919050565b60006020601f8301049050919050565b600082821b905092915050565b60006008830261390d7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff826138d0565b61391786836138d0565b95508019841693508086168417925050509392505050565b600061394a61394561394084612ab4565b612c6f565b612ab4565b9050919050565b6000819050919050565b6139648361392f565b61397861397082613951565b8484546138dd565b825550505050565b600090565b61398d613980565b61399881848461395b565b505050565b5b818110156139bc576139b1600082613985565b60018101905061399e565b5050565b601f821115613a01576139d2816138ab565b6139db846138c0565b810160208510156139ea578190505b6139fe6139f6856138c0565b83018261399d565b50505b505050565b600082821c905092915050565b6000613a2460001984600802613a06565b1980831691505092915050565b6000613a3d8383613a13565b9150826002028217905092915050565b613a5682612ce9565b67ffffffffffffffff811115613a6f57613a6e613147565b5b613a7982546135ce565b613a848282856139c0565b600060209050601f831160018114613ab75760008415613aa5578287015190505b613aaf8582613a31565b865550613b17565b601f198416613ac5866138ab565b60005b82811015613aed57848901518255600182019150602085019450602081019050613ac8565b86831015613b0a5784890151613b06601f891682613a13565b8355505b6001600288020188555050505b505050505050565b6000613b2a82612bd7565b9150613b3583612bd7565b925082820190508281121560008312168382126000841215161715613b5d57613b5c6133a3565b5b92915050565b6000613b6e82612bd7565b9150613b7983612bd7565b9250828203905081811260008412168282136000851215161715613ba057613b9f6133a3565b5b9291505056fea26469706673582212205b24719c7982a014a953a7006d63345afacaa868eb383342ea1dccebd65dc6be64736f6c63430008180033",
+  "deployedBytecode": "0x6080604052600436106101cd5760003560e01c8063d7b16b18116100f7578063eb7c6d0211610095578063f2435c0211610064578063f2435c02146106ac578063f55ddd06146106c8578063fc0a8a9a14610705578063fecf0fdd1461072e576101cd565b8063eb7c6d02146105fb578063eb7fa13a1461063a578063eb91d37e14610665578063eef9c27c14610690576101cd565b8063e80ba91d116100d1578063e80ba91d14610556578063e9a7897e14610572578063e9af88e51461057c578063eb02b3a1146105b9576101cd565b8063d7b16b18146104cf578063dba6335f146104eb578063dd6c3a4f14610516576101cd565b806365156b311161016f5780639b403afb1161013e5780639b403afb146103fe578063a534130f1461043e578063a6ceaeb81461047b578063c7515837146104a6576101cd565b806365156b311461032b5780636df3c06d146103565780636e7ee67a1461039357806389b08f11146103be576101cd565b806329729a76116101ab57806329729a7614610249578063434dcdeb146102865780634e28e00f146102c3578063603474c314610300576101cd565b80630b121c04146101d2578063198af150146101ee578063279f9b111461022d575b600080fd5b6101ec60048036038101906101e79190612aea565b61076e565b005b3480156101fa57600080fd5b5061021560048036038101906102109190612b9b565b610b3c565b60405161022493929190612bf0565b60405180910390f35b61024760048036038101906102429190612aea565b610ba9565b005b34801561025557600080fd5b50610270600480360381019061026b9190612c27565b610ea4565b60405161027d9190612c54565b60405180910390f35b34801561029257600080fd5b506102ad60048036038101906102a89190612c27565b610ecb565b6040516102ba9190612c54565b60405180910390f35b3480156102cf57600080fd5b506102ea60048036038101906102e59190612c27565b610ee9565b6040516102f79190612c54565b60405180910390f35b34801561030c57600080fd5b50610315610f0d565b6040516103229190612c54565b60405180910390f35b34801561033757600080fd5b50610340610f9c565b60405161034d9190612cce565b60405180910390f35b34801561036257600080fd5b5061037d60048036038101906103789190612aea565b610fc2565b60405161038a9190612c54565b60405180910390f35b34801561039f57600080fd5b506103a8611013565b6040516103b59190612c54565b60405180910390f35b3480156103ca57600080fd5b506103e560048036038101906103e09190612b9b565b61101d565b6040516103f59493929190612ebe565b60405180910390f35b34801561040a57600080fd5b5061042560048036038101906104209190612b9b565b611179565b6040516104359493929190612f0d565b60405180910390f35b34801561044a57600080fd5b5061046560048036038101906104609190612f52565b6111f2565b6040516104729190612c54565b60405180910390f35b34801561048757600080fd5b50610490611226565b60405161049d9190612c54565b60405180910390f35b3480156104b257600080fd5b506104cd60048036038101906104c89190612b9b565b611230565b005b6104e960048036038101906104e49190612f92565b61128d565b005b3480156104f757600080fd5b506105006116af565b60405161050d919061301c565b60405180910390f35b34801561052257600080fd5b5061053d60048036038101906105389190612b9b565b6116d3565b60405161054d9493929190612f0d565b60405180910390f35b610570600480360381019061056b9190612f52565b61174c565b005b61057a6119eb565b005b34801561058857600080fd5b506105a3600480360381019061059e9190612f52565b611b6b565b6040516105b09190612c54565b60405180910390f35b3480156105c557600080fd5b506105e060048036038101906105db9190612f52565b611b9f565b6040516105f296959493929190613037565b60405180910390f35b34801561060757600080fd5b50610622600480360381019061061d9190612b9b565b611ceb565b60405161063193929190613098565b60405180910390f35b34801561064657600080fd5b5061064f611de1565b60405161065c9190612c54565b60405180910390f35b34801561067157600080fd5b5061067a611de7565b6040516106879190612c54565b60405180910390f35b6106aa60048036038101906106a59190612c27565b611e1a565b005b6106c660048036038101906106c191906130d6565b611f8a565b005b3480156106d457600080fd5b506106ef60048036038101906106ea9190612aea565b612568565b6040516106fc9190612c54565b60405180910390f35b34801561071157600080fd5b5061072c60048036038101906107279190613272565b6125cd565b005b34801561073a57600080fd5b5061075560048036038101906107509190612aea565b612621565b60405161076594939291906132ce565b60405180910390f35b60058110156107a9576040517fa7b49d2800000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000806000858152602001908152602001600020905060008160000160008581526020019081526020016000209050600073ffffffffffffffffffffffffffffffffffffffff168160000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614610862576040517f20af493700000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166323b872dd3330876040518463ffffffff1660e01b81526004016108c393929190613313565b6020604051808303816000875af11580156108e2573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906109069190613376565b90508015610af557338260000160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555083826001018190555060008260020160006101000a81548160ff02191690831515021790555060008260020160016101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060008260030181905550600082600401819055508260010160008154809291906109e4906133d2565b91905055506000600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000209050600081600a019050806002016000815480929190610a49906133d2565b9190505550806003016000815480929190610a63906133d2565b919050555085816000016000828254610a7c919061341a565b9250508190555085816001016000828254610a97919061341a565b925050819055503373ffffffffffffffffffffffffffffffffffffffff1687897fdbf4c4d27b5e34bbf881be7dac886bcea215531446ee302000785e7ed5fd16b489604051610ae69190612c54565b60405180910390a45050610b34565b33306040517f4c4343f3000000000000000000000000000000000000000000000000000000008152600401610b2b92919061344e565b60405180910390fd5b505050505050565b600080600080600160008673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000209050806001016006015481600101600701548260010160080154935093509350509193909250565b600080600085815260200190815260200160002060000160008481526020019081526020016000209050600081600501600084815260200190815260200160002090503373ffffffffffffffffffffffffffffffffffffffff168160000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614610c75576040517f114fa33d00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b8160020160009054906101000a900460ff1615610cbe576040517f92a7414000000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663a9059cbb3384600101546040518363ffffffff1660e01b8152600401610d21929190613477565b6020604051808303816000875af1158015610d40573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610d649190613376565b905080610daa5730336040517f4c4343f3000000000000000000000000000000000000000000000000000000008152600401610da192919061344e565b60405180910390fd5b826003016000815480929190610dbf906134a0565b91905055508160010154836004016000828254610ddc91906134c9565b925050819055506000600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060010190508260010154816002016000828254610e4191906134c9565b925050819055508260010154816003016000828254610e6091906134c9565b92505081905550806005016000815480929190610e7c906134a0565b9190505550806004016000815480929190610e96906134a0565b919050555050505050505050565b600080610eaf611de7565b905060008184610ebf919061352c565b90508092505050919050565b60006020528060005260406000206000915090508060010154905081565b60008060008084815260200190815260200160002090508060010154915050919050565b60007f000000000000000000000000000000000000000000000000000000000000000073ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614610f94576040517f114fa33d00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600354905090565b600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008060008386610fd3919061352c565b905060198110610fe65760199150610fea565b8091505b600060648387610ffa919061355d565b611004919061352c565b90508093505050509392505050565b6000600554905090565b6001602052806000526040600020600091509050806000018054611040906135ce565b80601f016020809104026020016040519081016040528092919081815260200182805461106c906135ce565b80156110b95780601f1061108e576101008083540402835291602001916110b9565b820191906000526020600020905b81548152906001019060200180831161109c57829003601f168201915b505050505090806001016040518061012001604052908160008201548152602001600182015481526020016002820154815260200160038201548152602001600482015481526020016005820154815260200160068201548152602001600782015481526020016008820154815250509080600a016040518060800160405290816000820154815260200160018201548152602001600282015481526020016003820154815250509080600e0160009054906101000a900460ff16905084565b6000806000806000600160008773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020905080600101600201548160010160030154826001016004015483600101600501549450945094509450509193509193565b6000806000848152602001908152602001600020600001600083815260200190815260200160002060040154905092915050565b6000600454905090565b60018060008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600e0160006101000a81548160ff02191690831515021790555050565b8073ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16036112f2576040517ffa2ad7cf00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000806000878152602001908152602001600020600001600086815260200190815260200160002090508060020160009054906101000a900460ff1615611365576040517f92a7414000000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b8060000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146113ee576040517f114fa33d00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600081600501600086815260200190815260200160002090508273ffffffffffffffffffffffffffffffffffffffff168160000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff161415801561146b575083816002015414155b156114a2576040517f4b90524f00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6114b58383600101548360010154612744565b60018260020160006101000a81548160ff021916908315150217905550828260020160016101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506000600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600a0190506000600160008560000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600a0190508160020160008154809291906115da906133d2565b91905055508160030160008154809291906115f4906133d2565b9190505550836001015481600101600082825461161191906134c9565b9250508190555080600301600081548092919061162d906134a0565b919050555060018460030154111561164c5761164b89898988612815565b5b8473ffffffffffffffffffffffffffffffffffffffff16888a7f13dd60dc57dccdd98cc55a56e1a70e630e2bb3da3a379c80baac65b206c15c748933896001015460405161169c939291906135ff565b60405180910390a4505050505050505050565b7f000000000000000000000000000000000000000000000000000000000000000081565b6000806000806000600160008773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020905080600a016000015481600a016001015482600a016002015483600a01600301549450945094509450509193509193565b600080600084815260200190815260200160002060000160008381526020019081526020016000209050600073ffffffffffffffffffffffffffffffffffffffff168160000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff160361180d5782826040517f954aa9d5000000000000000000000000000000000000000000000000000000008152600401611804929190613636565b60405180910390fd5b600081600301541461184b576040517f635d60cd00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b8060020160009054906101000a900460ff1615611894576040517f92a7414000000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60018160020160006101000a81548160ff0219169083151502179055506000600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663a9059cbb8360000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1684600101546040518363ffffffff1660e01b8152600401611938929190613477565b6020604051808303816000875af1158015611957573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061197b9190613376565b9050806119e557308260000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff166040517f4c4343f30000000000000000000000000000000000000000000000000000000081526004016119dc92919061344e565b60405180910390fd5b50505050565b6000600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600101905060008160070154905060008113611a74576040517f8d3d1f4700000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600082600701819055506000600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663a9059cbb33846040518363ffffffff1660e01b8152600401611add929190613477565b6020604051808303816000875af1158015611afc573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190611b209190613376565b905080611b665730336040517f4c4343f3000000000000000000000000000000000000000000000000000000008152600401611b5d92919061344e565b60405180910390fd5b505050565b6000806000848152602001908152602001600020600001600083815260200190815260200160002060030154905092915050565b60008060008060008060008060008a815260200190815260200160002060000160008981526020019081526020016000209050600073ffffffffffffffffffffffffffffffffffffffff168160000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1603611c695788886040517f954aa9d5000000000000000000000000000000000000000000000000000000008152600401611c60929190613636565b60405180910390fd5b8060000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681600101548260020160009054906101000a900460ff168360020160019054906101000a900473ffffffffffffffffffffffffffffffffffffffff1684600301548560040154965096509650965096509650509295509295509295565b60606000806000600160008673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002090508060000181600101600001548260010160010154828054611d53906135ce565b80601f0160208091040260200160405190810160405280929190818152602001828054611d7f906135ce565b8015611dcc5780601f10611da157610100808354040283529160200191611dcc565b820191906000526020600020905b815481529060010190602001808311611daf57829003601f168201915b50505050509250935093509350509193909250565b60025481565b60006002600454611df8919061379f565b64174876e800611e08919061355d565b600654611e15919061341a565b905090565b6000611e24611de7565b9050808211611e5f576040517fa445dbda00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b60008183611e6d919061352c565b90506000600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663a9059cbb33846040518363ffffffff1660e01b8152600401611ece929190613477565b6020604051808303816000875af1158015611eed573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190611f119190613376565b905080611f575730336040517f4c4343f3000000000000000000000000000000000000000000000000000000008152600401611f4e92919061344e565b60405180910390fd5b81600454611f65919061341a565b6004819055508360056000828254611f7d919061341a565b9250508190555050505050565b6000600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060010160070154905060008112156120f057600082600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166370a08231336040518263ffffffff1660e01b815260040161203b919061301c565b602060405180830381865afa158015612058573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061207c91906137ff565b61208691906134c9565b90506064601e82612097919061355d565b6120a1919061352c565b826120ab9061382c565b826120b691906134c9565b10156120ee576040517fdae5a71700000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b505b600582101561212b576040517f0ba884dd00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000806000878152602001908152602001600020600001600086815260200190815260200160002090503373ffffffffffffffffffffffffffffffffffffffff168160000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16036121de576040517fb1f53bfb00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600073ffffffffffffffffffffffffffffffffffffffff168160000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16036122755785856040517f954aa9d500000000000000000000000000000000000000000000000000000000815260040161226c929190613636565b60405180910390fd5b8060020160009054906101000a900460ff16156122be576040517f92a7414000000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b6000600760009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166323b872dd3330876040518463ffffffff1660e01b815260040161231f93929190613313565b6020604051808303816000875af115801561233e573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906123629190613376565b905080156125205781600301600081548092919061237f906133d2565b91905055506000826005016000846003015481526020019081526020016000209050858160020181905550338160000160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055508481600101819055508483600401600082825461240a919061341a565b925050819055506000600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060010190508581600201600082825461246b919061341a565b9250508190555085816003016000828254612486919061341a565b925050819055508060040160008154809291906124a2906133d2565b91905055508060050160008154809291906124bc906133d2565b91905055503373ffffffffffffffffffffffffffffffffffffffff16888a7f4598c9bac3c289413f34953ac875b77b1ee7aacd5b26155c53b15c5ea5edd8bc87600301548b8b60405161251193929190613874565b60405180910390a4505061255f565b33306040517f4c4343f300000000000000000000000000000000000000000000000000000000815260040161255692919061344e565b60405180910390fd5b50505050505050565b6000806000808681526020019081526020016000206000016000858152602001908152602001600020905060006125bf8483600401546125a8919061341a565b85600185600301546125ba919061341a565b610fc2565b905080925050509392505050565b80600160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600001908161261c9190613a4d565b505050565b60008060008060008060008981526020019081526020016000206000016000888152602001908152602001600020905060008160050160008881526020019081526020016000209050600073ffffffffffffffffffffffffffffffffffffffff168260000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16036127015788886040517f954aa9d50000000000000000000000000000000000000000000000000000000081526004016126f8929190613636565b60405180910390fd5b8681600201548260000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1683600101549550955095509550505093509350935093565b6000600160008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600101905080600101600081548092919061279f906133d2565b9190505550828160060160008282546127b8919061341a565b92505081905550828160070160008282546127d39190613b1f565b925050819055508060050160008154809291906127ef906134a0565b91905055508181600301600082825461280891906134c9565b9250508190555050505050565b6000806000868152602001908152602001600020600001600085815260200190815260200160002090506000600190505b81600301548111612a9857600082600501600083815260200190815260200160002060000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16036128c85750612a85565b8373ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff1614801561290257508185145b1561290d5750612a85565b60008360050160008481526020019081526020016000206001015490506000600160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060010190508181600301600082825461298491906134c9565b9250508190555060006129a08660040154848860030154610fc2565b9050600081846129b091906134c9565b9050600081856129c091906134c9565b905081600360008282546129d4919061341a565b92505081905550848110612a14576040517f72f1e91a00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b836005016000815480929190612a29906134a0565b9190505550836000016000815480929190612a43906133d2565b919050555080846008016000828254612a5c919061341a565b9250508190555080846007016000828254612a779190613b63565b925050819055505050505050505b8080612a90906133d2565b915050612846565b505050505050565b6000604051905090565b600080fd5b600080fd5b6000819050919050565b612ac781612ab4565b8114612ad257600080fd5b50565b600081359050612ae481612abe565b92915050565b600080600060608486031215612b0357612b02612aaa565b5b6000612b1186828701612ad5565b9350506020612b2286828701612ad5565b9250506040612b3386828701612ad5565b9150509250925092565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000612b6882612b3d565b9050919050565b612b7881612b5d565b8114612b8357600080fd5b50565b600081359050612b9581612b6f565b92915050565b600060208284031215612bb157612bb0612aaa565b5b6000612bbf84828501612b86565b91505092915050565b612bd181612ab4565b82525050565b6000819050919050565b612bea81612bd7565b82525050565b6000606082019050612c056000830186612bc8565b612c126020830185612be1565b612c1f6040830184612bc8565b949350505050565b600060208284031215612c3d57612c3c612aaa565b5b6000612c4b84828501612ad5565b91505092915050565b6000602082019050612c696000830184612bc8565b92915050565b6000819050919050565b6000612c94612c8f612c8a84612b3d565b612c6f565b612b3d565b9050919050565b6000612ca682612c79565b9050919050565b6000612cb882612c9b565b9050919050565b612cc881612cad565b82525050565b6000602082019050612ce36000830184612cbf565b92915050565b600081519050919050565b600082825260208201905092915050565b60005b83811015612d23578082015181840152602081019050612d08565b60008484015250505050565b6000601f19601f8301169050919050565b6000612d4b82612ce9565b612d558185612cf4565b9350612d65818560208601612d05565b612d6e81612d2f565b840191505092915050565b612d8281612ab4565b82525050565b612d9181612bd7565b82525050565b61012082016000820151612dae6000850182612d79565b506020820151612dc16020850182612d79565b506040820151612dd46040850182612d79565b506060820151612de76060850182612d79565b506080820151612dfa6080850182612d79565b5060a0820151612e0d60a0850182612d79565b5060c0820151612e2060c0850182612d79565b5060e0820151612e3360e0850182612d88565b50610100820151612e48610100850182612d79565b50505050565b608082016000820151612e646000850182612d79565b506020820151612e776020850182612d79565b506040820151612e8a6040850182612d79565b506060820151612e9d6060850182612d79565b50505050565b60008115159050919050565b612eb881612ea3565b82525050565b60006101e0820190508181036000830152612ed98187612d40565b9050612ee86020830186612d97565b612ef6610140830185612e4e565b612f046101c0830184612eaf565b95945050505050565b6000608082019050612f226000830187612bc8565b612f2f6020830186612bc8565b612f3c6040830185612bc8565b612f496060830184612bc8565b95945050505050565b60008060408385031215612f6957612f68612aaa565b5b6000612f7785828601612ad5565b9250506020612f8885828601612ad5565b9150509250929050565b600080600080600060a08688031215612fae57612fad612aaa565b5b6000612fbc88828901612ad5565b9550506020612fcd88828901612ad5565b9450506040612fde88828901612ad5565b9350506060612fef88828901612ad5565b925050608061300088828901612b86565b9150509295509295909350565b61301681612b5d565b82525050565b6000602082019050613031600083018461300d565b92915050565b600060c08201905061304c600083018961300d565b6130596020830188612bc8565b6130666040830187612eaf565b613073606083018661300d565b6130806080830185612bc8565b61308d60a0830184612bc8565b979650505050505050565b600060608201905081810360008301526130b28186612d40565b90506130c16020830185612bc8565b6130ce6040830184612bc8565b949350505050565b600080600080608085870312156130f0576130ef612aaa565b5b60006130fe87828801612ad5565b945050602061310f87828801612ad5565b935050604061312087828801612ad5565b925050606061313187828801612ad5565b91505092959194509250565b600080fd5b600080fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b61317f82612d2f565b810181811067ffffffffffffffff8211171561319e5761319d613147565b5b80604052505050565b60006131b1612aa0565b90506131bd8282613176565b919050565b600067ffffffffffffffff8211156131dd576131dc613147565b5b6131e682612d2f565b9050602081019050919050565b82818337600083830152505050565b6000613215613210846131c2565b6131a7565b90508281526020810184848401111561323157613230613142565b5b61323c8482856131f3565b509392505050565b600082601f8301126132595761325861313d565b5b8135613269848260208601613202565b91505092915050565b6000806040838503121561328957613288612aaa565b5b600061329785828601612b86565b925050602083013567ffffffffffffffff8111156132b8576132b7612aaf565b5b6132c485828601613244565b9150509250929050565b60006080820190506132e36000830187612bc8565b6132f06020830186612bc8565b6132fd604083018561300d565b61330a6060830184612bc8565b95945050505050565b6000606082019050613328600083018661300d565b613335602083018561300d565b6133426040830184612bc8565b949350505050565b61335381612ea3565b811461335e57600080fd5b50565b6000815190506133708161334a565b92915050565b60006020828403121561338c5761338b612aaa565b5b600061339a84828501613361565b91505092915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b60006133dd82612ab4565b91507fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff820361340f5761340e6133a3565b5b600182019050919050565b600061342582612ab4565b915061343083612ab4565b9250828201905080821115613448576134476133a3565b5b92915050565b6000604082019050613463600083018561300d565b613470602083018461300d565b9392505050565b600060408201905061348c600083018561300d565b6134996020830184612bc8565b9392505050565b60006134ab82612ab4565b9150600082036134be576134bd6133a3565b5b600182039050919050565b60006134d482612ab4565b91506134df83612ab4565b92508282039050818111156134f7576134f66133a3565b5b92915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601260045260246000fd5b600061353782612ab4565b915061354283612ab4565b925082613552576135516134fd565b5b828204905092915050565b600061356882612ab4565b915061357383612ab4565b925082820261358181612ab4565b91508282048414831517613598576135976133a3565b5b5092915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b600060028204905060018216806135e657607f821691505b6020821081036135f9576135f861359f565b5b50919050565b60006060820190506136146000830186612bc8565b613621602083018561300d565b61362e6040830184612bc8565b949350505050565b600060408201905061364b6000830185612bc8565b6136586020830184612bc8565b9392505050565b60008160011c9050919050565b6000808291508390505b60018511156136b657808604811115613692576136916133a3565b5b60018516156136a15780820291505b80810290506136af8561365f565b9450613676565b94509492505050565b6000826136cf576001905061378b565b816136dd576000905061378b565b81600181146136f357600281146136fd5761372c565b600191505061378b565b60ff84111561370f5761370e6133a3565b5b8360020a915084821115613726576137256133a3565b5b5061378b565b5060208310610133831016604e8410600b84101617156137615782820a90508381111561375c5761375b6133a3565b5b61378b565b61376e848484600161366c565b92509050818404811115613785576137846133a3565b5b81810290505b9392505050565b600060ff82169050919050565b60006137aa82612ab4565b91506137b583613792565b92506137e27fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff84846136bf565b905092915050565b6000815190506137f981612abe565b92915050565b60006020828403121561381557613814612aaa565b5b6000613823848285016137ea565b91505092915050565b600061383782612bd7565b91507f80000000000000000000000000000000000000000000000000000000000000008203613869576138686133a3565b5b816000039050919050565b60006060820190506138896000830186612bc8565b6138966020830185612bc8565b6138a36040830184612bc8565b949350505050565b60008190508160005260206000209050919050565b60006020601f8301049050919050565b600082821b905092915050565b60006008830261390d7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff826138d0565b61391786836138d0565b95508019841693508086168417925050509392505050565b600061394a61394561394084612ab4565b612c6f565b612ab4565b9050919050565b6000819050919050565b6139648361392f565b61397861397082613951565b8484546138dd565b825550505050565b600090565b61398d613980565b61399881848461395b565b505050565b5b818110156139bc576139b1600082613985565b60018101905061399e565b5050565b601f821115613a01576139d2816138ab565b6139db846138c0565b810160208510156139ea578190505b6139fe6139f6856138c0565b83018261399d565b50505b505050565b600082821c905092915050565b6000613a2460001984600802613a06565b1980831691505092915050565b6000613a3d8383613a13565b9150826002028217905092915050565b613a5682612ce9565b67ffffffffffffffff811115613a6f57613a6e613147565b5b613a7982546135ce565b613a848282856139c0565b600060209050601f831160018114613ab75760008415613aa5578287015190505b613aaf8582613a31565b865550613b17565b601f198416613ac5866138ab565b60005b82811015613aed57848901518255600182019150602085019450602081019050613ac8565b86831015613b0a5784890151613b06601f891682613a13565b8355505b6001600288020188555050505b505050505050565b6000613b2a82612bd7565b9150613b3583612bd7565b925082820190508281121560008312168382126000841215161715613b5d57613b5c6133a3565b5b92915050565b6000613b6e82612bd7565b9150613b7983612bd7565b9250828203905081811260008412168282136000851215161715613ba057613b9f6133a3565b5b9291505056fea26469706673582212205b24719c7982a014a953a7006d63345afacaa868eb383342ea1dccebd65dc6be64736f6c63430008180033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 233,
+        "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+        "label": "repos",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_mapping(t_uint256,t_struct(Repo)151_storage)"
+      },
+      {
+        "astId": 238,
+        "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+        "label": "wallets",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_mapping(t_address,t_struct(Wallet)190_storage)"
+      },
+      {
+        "astId": 247,
+        "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+        "label": "DEDUCTION_FACTOR",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 250,
+        "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+        "label": "TOTAL_DEDUCTIONS",
+        "offset": 0,
+        "slot": "3",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 253,
+        "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+        "label": "SOLD_TOKENS",
+        "offset": 0,
+        "slot": "4",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 256,
+        "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+        "label": "TOTAL_RAISED",
+        "offset": 0,
+        "slot": "5",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 259,
+        "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+        "label": "RATE",
+        "offset": 0,
+        "slot": "6",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 265,
+        "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+        "label": "s_token",
+        "offset": 0,
+        "slot": "7",
+        "type": "t_contract(IERC20)77"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_contract(IERC20)77": {
+        "encoding": "inplace",
+        "label": "contract IERC20",
+        "numberOfBytes": "20"
+      },
+      "t_int256": {
+        "encoding": "inplace",
+        "label": "int256",
+        "numberOfBytes": "32"
+      },
+      "t_mapping(t_address,t_struct(Wallet)190_storage)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => struct GitHubStaking.Wallet)",
+        "numberOfBytes": "32",
+        "value": "t_struct(Wallet)190_storage"
+      },
+      "t_mapping(t_uint256,t_struct(Issue)143_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => struct GitHubStaking.Issue)",
+        "numberOfBytes": "32",
+        "value": "t_struct(Issue)143_storage"
+      },
+      "t_mapping(t_uint256,t_struct(Repo)151_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => struct GitHubStaking.Repo)",
+        "numberOfBytes": "32",
+        "value": "t_struct(Repo)151_storage"
+      },
+      "t_mapping(t_uint256,t_struct(Stake)125_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => struct GitHubStaking.Stake)",
+        "numberOfBytes": "32",
+        "value": "t_struct(Stake)125_storage"
+      },
+      "t_string_storage": {
+        "encoding": "bytes",
+        "label": "string",
+        "numberOfBytes": "32"
+      },
+      "t_struct(Issue)143_storage": {
+        "encoding": "inplace",
+        "label": "struct GitHubStaking.Issue",
+        "members": [
+          {
+            "astId": 127,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "creator",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address"
+          },
+          {
+            "astId": 129,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "prize",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 131,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "solved",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_bool"
+          },
+          {
+            "astId": 133,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "solver",
+            "offset": 1,
+            "slot": "2",
+            "type": "t_address"
+          },
+          {
+            "astId": 135,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "stakeCount",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 137,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "totalStakeAmt",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 142,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "stakes",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_uint256,t_struct(Stake)125_storage)"
+          }
+        ],
+        "numberOfBytes": "192"
+      },
+      "t_struct(IssueStats)179_storage": {
+        "encoding": "inplace",
+        "label": "struct GitHubStaking.IssueStats",
+        "members": [
+          {
+            "astId": 172,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "totalPriceAmt_SetByMe",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 174,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "openPriceAmt_SetByMe",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 176,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "totalIssues_SetByMe",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 178,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "openIssues_SetByMe",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256"
+          }
+        ],
+        "numberOfBytes": "128"
+      },
+      "t_struct(Repo)151_storage": {
+        "encoding": "inplace",
+        "label": "struct GitHubStaking.Repo",
+        "members": [
+          {
+            "astId": 148,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "issues",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_uint256,t_struct(Issue)143_storage)"
+          },
+          {
+            "astId": 150,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "issueCount",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_struct(Stake)125_storage": {
+        "encoding": "inplace",
+        "label": "struct GitHubStaking.Stake",
+        "members": [
+          {
+            "astId": 120,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "staker",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address"
+          },
+          {
+            "astId": 122,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "amt",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 124,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "pullReqId",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256"
+          }
+        ],
+        "numberOfBytes": "96"
+      },
+      "t_struct(Wallet)190_storage": {
+        "encoding": "inplace",
+        "label": "struct GitHubStaking.Wallet",
+        "members": [
+          {
+            "astId": 181,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "gitUsername",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_string_storage"
+          },
+          {
+            "astId": 184,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "stats",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_struct(WalletStats)170_storage"
+          },
+          {
+            "astId": 187,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "issueStats",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_struct(IssueStats)179_storage"
+          },
+          {
+            "astId": 189,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "accessedFreeTokens",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_bool"
+          }
+        ],
+        "numberOfBytes": "480"
+      },
+      "t_struct(WalletStats)170_storage": {
+        "encoding": "inplace",
+        "label": "struct GitHubStaking.WalletStats",
+        "members": [
+          {
+            "astId": 153,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "lostStakeCount",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 155,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "wonStakeCount",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 157,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "totalAmtStaked",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 159,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "openAmtStaked",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 161,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "totalStakes",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 163,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "openStakes",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 165,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "rewardsEarned",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 167,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "withdraw_proceedings",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_int256"
+          },
+          {
+            "astId": 169,
+            "contract": "contracts/GitHubStaking.sol:GitHubStaking",
+            "label": "lost_refund",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_uint256"
+          }
+        ],
+        "numberOfBytes": "288"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}
