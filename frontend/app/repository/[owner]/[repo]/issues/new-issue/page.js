@@ -11,14 +11,48 @@ export default function NewIssue() {
   const { owner, repo } = useParams()
 
   const [issueId, setIssueId] = useState()
-  //const [repoId, setRepoId] = useState()
   let repoId;
-  const [ethPrize, setEthPrize] = useState(0.1) // Default value 0.1 ETH
+  const [ethPrize, setEthPrize] = useState(0.1)
   const [title, setTitle] = useState("")
   const [tags, setTags] = useState("")
   const [description, setDescription] = useState("")
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [isDuplicate, setIsDuplicate] = useState(false)
+
+  const checkDuplicateIssue = async () => {
+    try {
+      const LStoken = localStorage.getItem("githubAccessToken")
+      if (!LStoken) {
+        setError("GitHub access token not found.")
+        return false
+      }
+
+      const response = await fetch(
+        `https://muj-gitstakeai.onrender.com/api/avoidDUp/${owner}/${repo}`,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${LStoken}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            title: title,
+            body: description
+          })
+        }
+      )
+
+      if (response.ok) {
+        const data = await response.json()
+        return data.message.includes("Similar")
+      }
+      return false
+    } catch (error) {
+      console.error("Error checking for duplicates:", error)
+      return false
+    }
+  }
 
   const handleCreateIssue = async () => {
     if (!title.trim() || !description.trim()) {
@@ -30,12 +64,22 @@ export default function NewIssue() {
     setError(null)
 
     try {
+      // First check for duplicates
+      const isDuplicateIssue = await checkDuplicateIssue()
+      if (isDuplicateIssue) {
+        setIsDuplicate(true)
+        setError("A similar issue already exists. Please check existing issues.")
+        setLoading(false)
+        return
+      }
+
       const LStoken = localStorage.getItem("githubAccessToken")
       if (!LStoken) {
         setError("GitHub access token not found.")
         setLoading(false)
         return
       }
+
       const repoResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
         headers: {
           Authorization: `token ${LStoken}`,
@@ -44,7 +88,6 @@ export default function NewIssue() {
       if (repoResponse.ok) {
         const repoData = await repoResponse.json()
         repoId = repoData?.id
-        console.log(repoId)
       } else {
         console.error("Failed to fetch repo info:", repoResponse.statusText)
       }
@@ -59,23 +102,16 @@ export default function NewIssue() {
           },
           body: JSON.stringify({
             title,
-            body: description, // Only the description is included in the body
-            labels: tags.split(",").map((tag) => tag.trim()), // Split tags into array and add as labels
+            body: description,
+            labels: tags.split(",").map((tag) => tag.trim()),
           }),
         },
       )
 
       if (response.ok) {
         const data = await response.json()
-        console.log("Issue created:", data?.number)
-        console.log("Issue created:", data)
         setIssueId(data?.number)
         try {
-          // stakingContract.on("IssueCreated", (repoId, issueId, creator, prize) => {
-          //   console.log(`Issue ${issueId.toString()} Created on Repo ${repoId.toString()}!`);
-          //   console.log(`Staker: ${creator}`);
-          //   console.log(`Prize: ${ethers.formatEther(prize)} GST`);
-          // });
           console.log("creatingIssue...", token, account, data?.number, repoId)
           if (token && account) {
             const tx = await stakingContract.createIssue(repoId, data?.number, (ethers.parseEther(ethPrize.toString())));
@@ -85,7 +121,6 @@ export default function NewIssue() {
         catch (error) {
           console.log("create issue:", error)
         }
-        // You can handle the ETH prize separately here if needed
         router.push(`/repository/${owner}/${repo}/issues`)
       } else {
         setError("Failed to create issue.")
@@ -96,6 +131,23 @@ export default function NewIssue() {
       console.error("Error creating issue:", error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  // Check for duplicates when title or description changes
+  const handleInputChange = async (field, value) => {
+    if (field === 'title') setTitle(value)
+    if (field === 'description') setDescription(value)
+    
+    // Only check for duplicates if both title and description have content
+    if (title.trim() && description.trim()) {
+      const isDuplicateIssue = await checkDuplicateIssue()
+      setIsDuplicate(isDuplicateIssue)
+      if (isDuplicateIssue) {
+        setError("A similar issue already exists. Please check existing issues.")
+      } else {
+        setError(null)
+      }
     }
   }
 
@@ -137,7 +189,7 @@ export default function NewIssue() {
           <input
             placeholder="Title"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => handleInputChange('title', e.target.value)}
             style={{
               color: "var(--font)",
               padding: "0 5px",
@@ -175,7 +227,7 @@ export default function NewIssue() {
           <textarea
             placeholder="Add your description here..."
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => handleInputChange('description', e.target.value)}
             style={{
               minHeight: 150,
               color: "var(--font)",
@@ -193,7 +245,7 @@ export default function NewIssue() {
           <button
             className={styles.ForkButton}
             onClick={handleCreateIssue}
-            disabled={loading}
+            disabled={loading || isDuplicate}
             style={{ width: 200 }}
           >
             {loading ? "Creating..." : "Create New Issue"}
@@ -203,9 +255,3 @@ export default function NewIssue() {
     </>
   )
 }
-
-// <table>
-//     <thead>
-//     19 open issues
-//     </thead>
-// </table>
