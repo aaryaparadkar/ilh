@@ -14,6 +14,7 @@ export default function PullReq() {
   const [suggestions, setSuggestions] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [linkedIssueNumber, setLinkedIssueNumber] = useState(null)
 
   useEffect(() => {
     const fetchPullRequests = async () => {
@@ -35,9 +36,17 @@ export default function PullReq() {
           console.log("Failed to fetch pull requests")
         }
         const data = await response.json()
-        console.log(data)
         setPullRequests(data)
-        console.log(pullRequests)
+
+        // Extract issue number from the first PR that has a linked issue
+        for (const pr of data) {
+          // Check PR body for issue reference (format: #123)
+          const issueMatch = pr.body?.match(/#(\d+)/)
+          if (issueMatch) {
+            setLinkedIssueNumber(issueMatch[1])
+            break
+          }
+        }
       } catch (err) {
         setError(err.message)
       } finally {
@@ -45,20 +54,30 @@ export default function PullReq() {
       }
     }
 
+    fetchPullRequests()
+  }, [owner, repo])
+
+  useEffect(() => {
     const fetchSuggestions = async () => {
+      if (!linkedIssueNumber) return;
+
       try {
+        const token = localStorage.getItem("githubAccessToken")
+        if (!token) {
+          console.error("GitHub access token not found.")
+          return
+        }
         const response = await fetch(
-          `https://muj-gitstakeai.onrender.com/api/suggestions/${owner}/${repo}/1`, 
-            {
-              headers: {
-                Authorization: `token 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`,
-                'Accept': 'application/vnd.github+json',
-              },
-            }
-          
+          `https://muj-gitstakeai.onrender.com/api/suggestions/${owner}/${repo}/${linkedIssueNumber}`,
+          {
+            headers: {
+              Authorization: `token ${token}`,
+              'Accept': 'application/json',
+            },
+          }
         );
         if (!response.ok) {
-          throw new Error("Failed to fetch suggestions")
+          throw new Error(`Failed to fetch suggestions: ${response.status}`)
         }
         const data = await response.json()
         setSuggestions(data)
@@ -67,9 +86,10 @@ export default function PullReq() {
       }
     }
 
-    fetchPullRequests()
-    fetchSuggestions()
-  }, [owner, repo])
+    if (linkedIssueNumber) {
+      fetchSuggestions()
+    }
+  }, [owner, repo, linkedIssueNumber])
 
   if (loading) return <p>Loading pull requests...</p>
   if (error) return <p>Error: {error}</p>
