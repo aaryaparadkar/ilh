@@ -107,7 +107,7 @@ export default function PullReq() {
       >
         <div>
           Highest Stake{" "}
-          <div style={{ color: "var(--aqua)", fontSize: 20 }}>0.4 ETH</div>
+          <div style={{ color: "var(--aqua)", fontSize: 20 }}>5 ETH</div>
         </div>
         <div>
           <input
