@@ -4,6 +4,7 @@ import axios from "axios"
 import { useRouter } from "next/navigation" // Import useRouter from next/router
 import styles from "../styles.module.css"
 import MyStatsCard from "@/components/myStats"
+import ChatBot from "@/components/chatbot"
 
 export default function Dashboard() {
   const [repos, setRepos] = useState([])
@@ -17,13 +18,13 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchRepos = async () => {
       try {
-        const token = localStorage.getItem("githubAccessToken")
-        if (token) {
+        const LStoken = localStorage.getItem("githubAccessToken")
+        if (LStoken) {
           const response = await axios.get(
             "https://api.github.com/user/repos",
             {
               headers: {
-                Authorization: `token ${token}`,
+                Authorization: `token ${LStoken}`,
               },
             },
           )
@@ -53,7 +54,7 @@ export default function Dashboard() {
       if (query) {
         setLoading(true)
         try {
-          const token = localStorage.getItem("githubAccessToken")
+          const LStoken = localStorage.getItem("githubAccessToken")
           // Search user's repositories
           const filtered = repos.filter((repo) =>
             repo.name.toLowerCase().includes(query.toLowerCase()),
@@ -62,6 +63,11 @@ export default function Dashboard() {
           // Fetch global repositories if the search term is provided
           const globalResponse = await axios.get(
             `https://api.github.com/search/repositories?q=${query}+in:name`,
+            {
+              headers: {
+                Authorization: `token ${LStoken}`,
+              },
+            },
           )
           setGlobalRepos(globalResponse.data.items)
 
@@ -183,6 +189,9 @@ export default function Dashboard() {
         </div>
         <div>
           <MyStatsCard />
+        </div>
+        <div>
+          <ChatBot />
         </div>
 
         {/* Add other components like MyStatsCard and ChatBot */}
