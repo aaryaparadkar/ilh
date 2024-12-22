@@ -11,6 +11,7 @@ export default function PullReq() {
 
   const { owner, repo } = useParams()
   const [pullRequests, setPullRequests] = useState()
+  const [suggestions, setSuggestions] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -44,7 +45,30 @@ export default function PullReq() {
       }
     }
 
+    const fetchSuggestions = async () => {
+      try {
+        const response = await fetch(
+          `https://muj-gitstakeai.onrender.com/api/suggestions/${owner}/${repo}/1`, 
+            {
+              headers: {
+                Authorization: `token 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`,
+                'Accept': 'application/vnd.github+json',
+              },
+            }
+          
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch suggestions")
+        }
+        const data = await response.json()
+        setSuggestions(data)
+      } catch (err) {
+        console.error("Error fetching suggestions:", err)
+      }
+    }
+
     fetchPullRequests()
+    fetchSuggestions()
   }, [owner, repo])
 
   if (loading) return <p>Loading pull requests...</p>
@@ -151,6 +175,47 @@ export default function PullReq() {
 
           <div>Limit Exceeded</div>}
       </div>
+
+      {suggestions && (
+        <div
+          style={{
+            margin: "40px auto",
+            maxWidth: "800px",
+            padding: "20px",
+            background: "var(--button)",
+            borderRadius: "8px",
+            border: "1px solid var(--divider)"
+          }}
+        >
+          <h2 style={{ color: "var(--aqua)", marginBottom: "20px" }}>Suggested Pull Requests</h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+            {suggestions.topPullRequest && (
+              <div>
+                <h3 style={{ color: "var(--aqua)" }}>Top Match (Score: {suggestions.topPullRequest.relevanceScore})</h3>
+                <Link href={suggestions.topPullRequest.url}>
+                  {suggestions.topPullRequest.title}
+                </Link>
+              </div>
+            )}
+            {suggestions.secondOptimal && (
+              <div>
+                <h3 style={{ color: "var(--aqua)" }}>Second Match</h3>
+                <Link href={suggestions.secondOptimal.url}>
+                  {suggestions.secondOptimal.title}
+                </Link>
+              </div>
+            )}
+            {suggestions.thirdOptimal && (
+              <div>
+                <h3 style={{ color: "var(--aqua)" }}>Third Match</h3>
+                <Link href={suggestions.thirdOptimal.url}>
+                  {suggestions.thirdOptimal.title}
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </>
   )
 }
