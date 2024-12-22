@@ -1,6 +1,7 @@
 "use client"
 import styles from "../../../../../styles.module.css"
 import DiscussionCard from "@/components/discussioncard"
+import NewCard from "@/components/newCard"
 import PullReqCard from "@/components/pullRequestCard"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -224,6 +225,8 @@ export default function Pull() {
             ))}
           </ol>
         </div>
+
+        <NewCard comments={comments} pullDetails={pullDetails} />
       </div>
     </>
   )
