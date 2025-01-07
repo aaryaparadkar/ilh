@@ -84,3 +84,7 @@ module.exports.tags = ["all", "update-frontend"];
 
 // Token address: 0x7a96dd67BDf633B36101F910DC45e692203a45a6
 // Staking contract address: 0x20C9c54bd86C309d3Cc71Ba73BcA701711dEC5bC
+
+
+// https://amoy.polygonscan.com/address/0x7a96dd67BDf633B36101F910DC45e692203a45a6#writeContract
+// https://amoy.polygonscan.com/address/0x20C9c54bd86C309d3Cc71Ba73BcA701711dEC5bC

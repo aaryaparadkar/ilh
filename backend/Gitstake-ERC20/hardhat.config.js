@@ -53,14 +53,14 @@ module.exports = {
       { version: "0.4.19" },
     ],
   },
-  // etherscan: {
-  //   apiKey: ETHERSCAN_API_KEY,
-  // },
   etherscan: {
-    apiKey: {
-      polygonAmoy: POLYSCAN_API_KEY
-    }
+    apiKey: ETHERSCAN_API_KEY,
   },
+  // etherscan: {
+  //   apiKey: {
+  //     polygonAmoy: POLYSCAN_API_KEY
+  //   }
+  // },
   gasReporter: {
     enabled: true,
     currency: "INR",

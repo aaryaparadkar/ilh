@@ -11,9 +11,9 @@ const networkConfig = {
   11155111: {
     name: "sepolia",
   },
-  80002 :{
-    name : "polygonAmoy"
-  }
+  80002: {
+    name: "polygonAmoy",
+  },
 }
 const INITIAL_SUPPLY = "1000000"
 
