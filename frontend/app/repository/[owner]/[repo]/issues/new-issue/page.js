@@ -138,7 +138,7 @@ export default function NewIssue() {
   const handleInputChange = async (field, value) => {
     if (field === 'title') setTitle(value)
     if (field === 'description') setDescription(value)
-    
+
     // Only check for duplicates if both title and description have content
     if (title.trim() && description.trim()) {
       const isDuplicateIssue = await checkDuplicateIssue()

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import { useParams } from "next/navigation"
 
 import profile from "../app/assets/profile1.jpg"
@@ -8,16 +8,62 @@ import raise from "../app/assets/raise.png"
 import remove from "../app/assets/remove.png"
 import Image from "next/image"
 import styles from "../app/styles.module.css"
+import Web3Context from "@/context/Web3Context";
+import { ethers } from "ethers";
 
-export default function PullReqCard() {
+export default function PullReqCard({ stakeholders }) {
+  console.log(stakeholders)
+
+  const { provider, account, stakingContract, token, chainId } = useContext(Web3Context)
   const { owner, repo, issue, pull } = useParams()
-  console.log(owner, repo, issue, pull)
-
   const [authenticatedUser, setAuthenticatedUser] = useState(null)
   const [linkedPrs, setLinkedPrs] = useState([]) // Array to store multiple PRs
+  const [repoId, setRepoId] = useState()
+  const [issueId, setIssueId] = useState(issue)
+  const [stakesData, setStakesData] = useState({})
+
+  const handleMerge = (pullReqId) => {
+    if (repoId && issueId && pullReqId) {
+      try {
+        // markSolved
+      }
+      catch (e) {
+        console.log(e)
+      }
+    }
+  }
+
+  /*const fetchStakeAddress = async (pullReqId) => {
+    if (repoId && issueId && pullReqId) {
+      try {
+        const stakeData = await stakingContract.getStake(repoId, issueId, pullReqId);
+        const stakerAddress = stakeData[0]; // staker's address
+        return stakerAddress;
+      }
+      catch (e) {
+        console.log(e)
+      }
+    }
+  }
+
+  const fetchStakeAmt = async (pullReqId) => {
+    if (repoId && issueId && pullReqId) {
+      try {
+        const stakeData = await stakingContract.getStake(repoId, issueId, pullReqId);
+        const stakedAmount = stakeData[1]; // staked amount
+        return stakedAmount;
+      }
+      catch (e) {
+        console.log(e)
+      }
+    }
+  }*/
+
+
 
   useEffect(() => {
     const fetchUser = async () => {
+
       try {
         const LStoken = localStorage.getItem("githubAccessToken")
         if (!LStoken) {
@@ -41,7 +87,6 @@ export default function PullReqCard() {
         console.error("Error fetching data:", error)
       }
     }
-    fetchUser()
 
     const fetchLinkedPRs = async () => {
       try {
@@ -61,7 +106,6 @@ export default function PullReqCard() {
             },
           )
           const data = await response.json()
-          console.log(typeof data)
           if (Array.isArray(data.items) && data.items.length > 0) {
             const prsData = await Promise.all(
               data?.items.map(async (item) => {
@@ -112,13 +156,86 @@ export default function PullReqCard() {
       }
     }
 
-    fetchLinkedPRs()
-  }, [issue, pull, repo, owner])
 
-  const dataToDisplay =
-    Array.isArray(linkedPrs) && linkedPrs.length > 0 ? linkedPrs : []
-  console.log(typeof dataToDisplay)
-  console.log(dataToDisplay)
+    const fetchRepo = async () => {
+      try {
+        const LStoken = localStorage.getItem("githubAccessToken")
+        if (!LStoken) {
+          console.error("GitHub access token not found.")
+          return
+        }
+        const repoResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+          headers: {
+            Authorization: `token ${LStoken}`,
+          },
+        })
+        if (repoResponse.ok) {
+          const repoData = await repoResponse.json()
+          const repoID = repoData?.id
+          setRepoId(repoData?.id)
+          console.log(repoID)
+        } else {
+          console.error("Failed to fetch repo info:", repoResponse.statusText)
+        }
+
+      } catch (error) {
+        console.log("Error", error)
+      }
+    }
+
+    if (account == 0 || !account || !token) {
+      alert("Connect Wallet.")
+    }
+    else {
+      fetchUser()
+      fetchLinkedPRs()
+      fetchRepo()
+    }
+
+  }, [issue, pull, repo, owner, account, token])
+
+
+  // useEffect(() => {
+  //   const fetchStakeDataForPRs = async () => {
+  //     if (repoId && issueId && linkedPrs.length > 0) {
+  //       try {
+  //         const stakes = await Promise.all(
+  //           linkedPrs.map(async (pr) => {
+  //             console.log(repoId, issueId, pr.id)
+
+  //             let stakeData;
+
+  //             if (stakeholders) {
+  //               stakeData = stakeholders.find(stake => stake.pullReqId === pr.id) || { index: "", pullReqId: pr.id , staker: "N.A.", stakeAmount: "0" };
+  //             }
+  //             console.log(stakeData)
+
+  //             return {
+  //               prId: pr.id,
+  //               stakerAddress: stakeData[0],
+  //               stakedAmount: ethers.formatEther(stakeData[1].toString()),
+  //             }
+  //           }),
+  //         )
+
+  //         // Convert the stakes array to an object with PR IDs as keys
+  //         const stakeObject = stakes.reduce((acc, stake) => {
+  //           acc[stake.prId] = stake
+  //           return acc
+  //         }, {})
+
+  //         setStakesData(stakeObject)
+  //       } catch (error) {
+  //         console.log("Error fetching stake data:", error)
+  //       }
+  //     }
+  //   }
+
+  //   fetchStakeDataForPRs()
+  // }, [repoId, issueId, linkedPrs])
+
+  const dataToDisplay = null
+  //   Array.isArray(linkedPrs) && linkedPrs.length > 0 ? linkedPrs : []
 
   return (
     <>
@@ -152,7 +269,7 @@ export default function PullReqCard() {
               }}
             >
               <div style={{ color: "var(--aqua)" }}>
-                {data.user ? data.user.login : ""}
+                {data.user ? data.user.login : ""} ({stakesData[data.id]?.stakerAddress || "Loading..."})
               </div>
               <div>
                 Staked
@@ -166,7 +283,7 @@ export default function PullReqCard() {
                     fontSize: 20,
                   }}
                 >
-                  5 ETH
+                  {stakesData[data.id]?.stakedAmount || "0"}  GST
                 </span>
                 <span
                   style={{
@@ -205,9 +322,9 @@ export default function PullReqCard() {
 
               <div>
                 {data.state === "closed" ? (
-                  <div style={{ color: "var(--aqua)" }}> Merged </div>
+                  <div style={{ color: "var(--aqua)" }}> Closed </div>
                 ) : (
-                  <button className={styles.ForkButton}>Merge</button>
+                  <button className={styles.ForkButton} onClick={() => handleMerge(data?.id, stakesData[data.id]?.stakerAddress)}>Merge</button>
                 )}
               </div>
             </div>

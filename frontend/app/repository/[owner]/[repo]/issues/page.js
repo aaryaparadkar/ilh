@@ -3,20 +3,25 @@ import React, { useState, useEffect, useCallback, useContext } from "react"
 import Link from "next/link"
 import styles from "../../../../styles.module.css"
 import { useParams } from "next/navigation"
-import Web3Context from "@/context/Web3Context";
-import { ethers } from "ethers";
+import Web3Context from "@/context/Web3Context"
+import { ethers } from "ethers"
+import { useRouter } from "next/navigation"
 
 export default function Issues() {
-  const { provider, account, stakingContract, token, chainId } = useContext(Web3Context)
+  const { provider, account, stakingContract, token, chainId } =
+    useContext(Web3Context)
+  const router = useRouter()
 
   const { owner, repo } = useParams()
-  //const [repoId, setRepoId] = useState()
-  let repoId;
+  console.log(owner, repo)
+
+  let repoId
+  const [repoidstate, setrepoidstate] = useState(0)
+
   const [issues, setIssues] = useState([])
   const [authenticatedUser, setAuthenticatedUser] = useState(null)
   const [searchQuery, setSearchQuery] = useState("")
   const [filteredIssues, setFilteredIssues] = useState([])
-  //const [prizes, setPrizes] = useState({})
   const [issueInfo, setIssueInfo] = useState({})
 
   useEffect(() => {
@@ -27,14 +32,18 @@ export default function Issues() {
           console.error("GitHub access token not found.")
           return
         }
-        const repoResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
-          headers: {
-            Authorization: `token ${LStoken}`,
+        const repoResponse = await fetch(
+          `https://api.github.com/repos/${owner}/${repo}`,
+          {
+            headers: {
+              Authorization: `token ${LStoken}`,
+            },
           },
-        })
+        )
         if (repoResponse.ok) {
           const repoData = await repoResponse.json()
           repoId = repoData?.id
+          setrepoidstate(repoData?.id)
         } else {
           console.error("Failed to fetch repo info:", repoResponse.statusText)
         }
@@ -47,7 +56,7 @@ export default function Issues() {
 
         if (userResponse.ok) {
           const userData = await userResponse.json()
-          setAuthenticatedUser(userData.login)
+          setAuthenticatedUser(userData?.login)
         } else {
           console.error("Failed to fetch user info:", userResponse.statusText)
         }
@@ -88,23 +97,27 @@ export default function Issues() {
 
         if (repoId) {
           for (const issue of issuesAndLinkedPRs) {
-            const [winPrize, stakeCount, totalStakeAmount] = await getIssueInfo(issue.number)
-            //setPrizes((prev) => ({ ...prev, [issue.number]: winPrize }))
+            const [winPrize, stakeCount, totalStakeAmount, creator, solved] =
+              await getIssueInfo(repoId, issue.number)
             setIssueInfo((prev) => ({
               ...prev,
-              [issue.number]: { prize: winPrize, stakeCount, totalStakeAmount },
+              [issue.number]: {
+                prize: winPrize,
+                stakeCount,
+                totalStakeAmount,
+                creator,
+                solved,
+              },
             }))
           }
         }
-
       } catch (error) {
         console.error("Error fetching data:", error)
       }
     }
 
-
     fetchIssues()
-  }, [owner, repo])
+  }, [owner, repo, account])
 
   // Debounce function to delay search input processing
   const debounce = (func, delay) => {
@@ -135,64 +148,94 @@ export default function Issues() {
     }, 300),
     [issues],
   )
-
-  const handleCloseIssue = async (issueNumber) => {
-    try {
-      const LStoken = localStorage.getItem("githubAccessToken")
-      if (!LStoken) {
-        console.log("GitHub access token not found.")
-        return
-      }
-      console.log("token", LStoken)
-      console.log("issueNo", issueNumber)
-
-      const response = await fetch(
-        `https://api.github.com/repos/${owner}/${repo}/issues/${issueNumber}`,
-        {
-          mGSTod: "PATCH",
-          headers: {
-            Authorization: `token ${LStoken}`,
-            Accept: "application/vnd.github.v3+json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            state: "closed", // Close the issue
-          }),
-        },
-      )
-
-      console.log(response)
-      if (response.ok) {
-        // Filter out the closed issue from both states
-        setIssues((prevIssues) =>
-          prevIssues.filter((issue) => issue.number !== issueNumber),
-        )
-        setFilteredIssues((prevFilteredIssues) =>
-          prevFilteredIssues.filter((issue) => issue.number !== issueNumber),
-        )
-        console.log(`Issue #${issueNumber} closed successfully.`)
-      } else {
-        const errorData = await response.json()
-        console.log(
-          "Failed to close issue:",
-          response.status,
-          response.statusText,
-          errorData,
-        )
-      }
-    } catch (error) {
-      console.log("Error closing issue:", error)
+  const handleNewIssue = () => {
+    if (authenticatedUser !== owner) {
+      console.log(authenticatedUser, owner)
+      console.log("Helle")
+      alert("You do not have permission to create issue currently. Only the repository owner can create it.")
+      return
     }
+    router.push(`/repository/${owner}/${repo}/issues/new-issue`)
+  }
+  const handleCloseIssue = async (issueNumber) => {
+    if (authenticatedUser !== owner) {
+      alert("You do not have permission to close this issue. Only the repository owner can close it.")
+      return
+    }
+    const userResponse = confirm("Do you want to close this issue?");
+
+    if (userResponse) {
+      try {
+        console.log(repoidstate, issueNumber)
+        const tx = await stakingContract.closeIssueNoSolver(repoidstate, issueNumber)
+        const receipt = await tx.wait(2)
+        if (receipt.status === 1) {
+          console.log("Transaction was successful!")
+
+          const LStoken = localStorage.getItem("githubAccessToken")
+          if (!LStoken) {
+            console.log("GitHub access token not found.")
+            return
+          }
+          console.log("token", LStoken)
+          console.log("issueNo", issueNumber)
+
+          const response = await fetch(
+            `https://api.github.com/repos/${owner}/${repo}/issues/${issueNumber}`,
+            {
+              method: "PATCH",
+              headers: {
+                Authorization: `token ${LStoken}`,
+                Accept: "application/vnd.github.v3+json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                state: "closed", // Close the issue
+              }),
+            },
+          )
+
+          if (response.ok) {
+            // Filter out the closed issue from both states
+            setIssues((prevIssues) =>
+              prevIssues.filter((issue) => issue.number !== issueNumber),
+            )
+            setFilteredIssues((prevFilteredIssues) =>
+              prevFilteredIssues.filter((issue) => issue.number !== issueNumber),
+            )
+            console.log(`Issue #${issueNumber} closed successfully.`)
+            alert("Closed")
+          } else {
+            const errorData = await response.json()
+            console.log(
+              "Failed to close issue:",
+              response.status,
+              response.statusText,
+              errorData,
+            )
+            alert(errorData.message)
+          }
+        } else {
+          alert("Transaction failed!")
+        }
+      } catch (error) {
+        console.log("Error closing issue:", error)
+      }
+    }
+    else return
   }
 
-  const getIssueInfo = async (issueId) => {
+  const getIssueInfo = async (repoId, issueId) => {
     try {
       if (token && account) {
-        console.log("repoid", repoId)
-        const [creator, prize, solved, solver, stakeCount, totalStakeAmt] = await stakingContract.getIssue(repoId, issueId)
+        const [creator, prize, solved, solver, stakeCount, totalStakeAmt] =
+          await stakingContract.getIssue(repoId, issueId)
         return [
-          ethers.formatEther(prize),
-          stakeCount, totalStakeAmt
+          ethers.formatEther(prize, 18),
+          stakeCount,
+          ethers.formatEther(totalStakeAmt, 18),
+          creator.toString(),
+          solved,
         ]
       }
     } catch (e) {
@@ -202,11 +245,11 @@ export default function Issues() {
   }
 
   const getHighestPrize = () => {
-    const prizes = Object.values(issueInfo).map((info) => parseFloat(info.prize) || 0)
+    const prizes = Object.values(issueInfo).map(
+      (info) => parseFloat(info.prize) || 0,
+    )
     return Math.max(...prizes).toFixed(2) // Return the highest prize formatted to 2 decimals
   }
-
-
 
   return (
     <>
@@ -221,7 +264,9 @@ export default function Issues() {
       >
         <div>
           Highest Win Prize{" "}
-          <div style={{ color: "var(--aqua)", fontSize: 20 }}>{getHighestPrize()} GST</div>
+          <div style={{ color: "var(--aqua)", fontSize: 20 }}>
+            {10} GST
+          </div>
         </div>
 
         <div>
@@ -240,9 +285,7 @@ export default function Issues() {
           ></input>
         </div>
         <div>
-          <Link href={`/repository/${owner}/${repo}/issues/new-issue`}>
-            <button className={styles.ForkButton}>New Issue</button>
-          </Link>
+          <button className={styles.ForkButton} onClick={handleNewIssue}>New Issue</button>
         </div>
       </div>
       <div className={styles.IssuesTable}>
@@ -256,7 +299,7 @@ export default function Issues() {
               {filteredIssues.length} open issues
             </div>
             <div style={{ color: "var(--aqua)" }}>Win Prize</div>
-            <div style={{ color: "var(--aqua)" }}>Milestones</div>
+            <div style={{ color: "var(--aqua)" }}>Creator</div>
             <div style={{ color: "var(--aqua)" }}>Assignee</div>
             <div style={{ color: "var(--aqua)" }}>Stakes</div>
             <div style={{ color: "var(--aqua)" }}>Close</div>
@@ -311,19 +354,33 @@ export default function Issues() {
                   </div>
                 </div>
 
-                <div> {issueInfo[issue.number]?.prize || "0"} GST </div>
+                <div> {issueInfo[issue.number]?.prize || "10"} GST </div>
                 <div>
-                  {issue.milestone ? issue.milestone.title : "No milestone"}
+                  {issueInfo[issue.number]?.creator
+                    ? issueInfo[issue.number]?.creator.substring(0, 6) +
+                    "..." +
+                    issueInfo[issue.number]?.creator.substring(
+                      issueInfo[issue.number]?.creator.length - 3,
+                    )
+                    : "Not Staked"}
                 </div>
                 <div>
                   {issue.assignee ? issue.assignee.login : "No assignee"}
                 </div>
-                <div> {issueInfo[issue.number]?.stakeCount || 0} ({issueInfo[issue.number]?.totalStakeAmount || 0} GST) </div>
+                <div>
+                  {" "}
+                  {issueInfo[issue.number]?.stakeCount?.toString() || "0"} (
+                  {issueInfo[issue.number]?.totalStakeAmount || "0"} GST){" "}
+                </div>
                 <div>
                   <button
                     className={styles.ForkButton}
-                    onClick={() => handleCloseIssue(issue.number)}
-                    disabled={authenticatedUser !== owner}
+                    onClick={() =>
+                      handleCloseIssue(
+                        issue.number,
+                        issueInfo[issue.number]?.solved || true,
+                      )
+                    }
                   >
                     Close
                   </button>

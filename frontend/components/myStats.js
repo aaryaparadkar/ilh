@@ -3,13 +3,16 @@ import { useContext, useEffect, useState } from "react";
 import styles from "../app/styles.module.css";
 import Web3Context from "@/context/Web3Context";
 import { ethers } from "ethers";
+// import { BigNumber, parseUnits } from 'ethers';
 
 export default function MyStatsCard() {
 
-    const INITIAL_AMT = ethers.parseEther("100");
+    //const INITIAL_AMT = ethers.parseEther("100");
     const [ethAmt, setEthAmt] = useState(0);
     const [estGST, setEstGST] = useState(0);
-    const CONTRACT_FUNDS = ethers.parseEther("1000");
+    const CONTRACT_FUNDS = ethers.parseEther("500");
+    // Convert 100 tokens to BigNumber, assuming the token has 18 decimal places
+    const INITIAL_AMT = ethers.parseUnits("100", 18);
 
     const { provider, account, stakingContract, token, chainId } = useContext(Web3Context)
 
@@ -44,26 +47,29 @@ export default function MyStatsCard() {
     };
 
     useEffect(() => {
-        async function fetchData() {
-            console.log(ethers.parseEther(ethAmt))
-            console.log(ethers.parseEther("5"))
-            if (ethers.parseEther(ethAmt) <= ethers.parseEther("10")) {
-                try {
-                    const estGSTfromcontract = await stakingContract.getGSTValueForETHValue(ethers.parseEther(ethAmt))
-                    console.log(estGSTfromcontract.toString())
-                    setEstGST(parseInt(estGSTfromcontract))
+        const timer = setTimeout(() => {
+            async function fetchData() {
+                console.log(1)
+                if (ethers.parseEther(ethAmt) <= ethers.parseEther("10")) {
+                    try {
+                        const estGSTfromcontract = await stakingContract.getGSTValueForETHValue(ethers.parseEther(ethAmt));
+                        console.log(estGSTfromcontract.toString());
+                        setEstGST(parseInt(estGSTfromcontract));
+                    } catch (e) {
+                        console.log(e);
+                    }
+                } else {
+                    setEstGST(0);
                 }
-                catch (e) {
-                    console.log(e)
-                }
-            } else {
-                setEstGST(0)
             }
-        }
-        if (ethAmt && ethAmt > 0) {
-            fetchData()
-        }
-    }, [ethAmt])
+
+            if (ethAmt && ethAmt > 0) {
+                fetchData();
+            }
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, [ethAmt]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -89,23 +95,23 @@ export default function MyStatsCard() {
                     const getAllowance = await token.allowance(account, stakingContract.target)
                     setAllowance(ethers.formatUnits(getAllowance, 18))
 
-                    const { user, lost, won } = await stakingContract.getBasicWalletDetails()
+                    const { user, lost, won } = await stakingContract.getBasicWalletDetails(account)
                     setUser(user)
                     setlostStakeCount((lost) ? parseInt(lost) : 0)
                     setwonStakeCount((lost) ? parseInt(won) : 0)
 
-                    const { totalPriceAmt_SetByMe, openPriceAmt_SetByMe, totalIssues_SetByMe, openIssues_SetByMe } = await stakingContract.getIssueStats()
+                    const { totalPriceAmt_SetByMe, openPriceAmt_SetByMe, totalIssues_SetByMe, openIssues_SetByMe } = await stakingContract.getIssueStats(account)
                     settotalPriceAmt_SetByMe(ethers.formatUnits(totalPriceAmt_SetByMe, 18))
                     setopenPriceAmt_SetByMe(ethers.formatUnits(openPriceAmt_SetByMe, 18))
                     settotalIssues_SetByMe((totalIssues_SetByMe) ? parseInt(totalIssues_SetByMe) : 0)
                     setopenIssues_SetByMe((openIssues_SetByMe) ? parseInt(openIssues_SetByMe) : 0)
 
-                    const { rewardsEarned, withdrawAmt, lost_refund } = await stakingContract.getRewardsWalletDetails()
+                    const { rewardsEarned, withdrawAmt, lost_refund } = await stakingContract.getRewardsWalletDetails(account)
                     setrewardsEarned(ethers.formatUnits(rewardsEarned, 18))
-                    setWithdrawAmt(ethers.formatUnits(withdrawAmt, 18))
+                    setWithdrawAmt((withdrawAmt) ? ethers.formatUnits(withdrawAmt, 18) : ethers.formatUnits(0, 18))
                     setlost_refund(ethers.formatUnits(lost_refund, 18))
 
-                    const { totalAmtStaked, openAmtStaked, totalStakes, openStakes } = await stakingContract.getStakingWalletDetails()
+                    const { totalAmtStaked, openAmtStaked, totalStakes, openStakes } = await stakingContract.getStakingWalletDetails(account)
                     settotalAmtStaked(ethers.formatUnits(totalAmtStaked, 18))
                     setopenAmtStaked(ethers.formatUnits(openAmtStaked, 18))
                     settotalStakes((totalStakes) ? parseInt(totalStakes) : 0)
@@ -126,10 +132,28 @@ export default function MyStatsCard() {
             // setTxStatus("Approving...")
             if (token) {
                 let currentAllowance = await token.allowance(account, stakingContract.target);
-                let newAllowance = currentAllowance + INITIAL_AMT; // Increase by 10000 tokens
-                console.log(stakingContract.target)
+
+                console.log("Current Allowance:", currentAllowance.toString());
+                console.log("Contract:", stakingContract.target);
+
+                // let newAllowance = currentAllowance.add(INITIAL_AMT); // Increase by 100 tokens
+                let newAllowance = currentAllowance + INITIAL_AMT;
+
                 const tx = await token.approve(stakingContract.target, newAllowance);
                 await tx.wait();
+
+                // if (isOwner) {
+
+                //     let OwnercurrentAllowance = await token.allowance(account, account);
+
+                //     console.log(OwnercurrentAllowance);
+                //     console.log("Initial Amount:", INITIAL_AMT.toString());
+                //     if (parseInt(OwnercurrentAllowance) <= 0) {
+                //         const tx = await token.approveOwnerOfSupply(ethers.parseEther("1000000"))
+                //         await tx.wait();
+                //     }
+                // }
+
 
                 const reciept = await tx.wait()
                 if (reciept.status == 1) {
@@ -151,7 +175,7 @@ export default function MyStatsCard() {
 
     async function fundContract() {
         try {
-            console.log(`Funding contract ${stakingContract.target}`)
+            console.log(`Funding contract ${stakingContract.target} from GST ${token.target}.`)
             const tx = await token.fundContract(stakingContract.target, CONTRACT_FUNDS)
             const response = await tx.wait(1)
             if (response.status == 0) {
@@ -167,18 +191,20 @@ export default function MyStatsCard() {
     async function requestTokens() {
         try {
             if (ethAmt <= 0) {
-                alert("Enter POL Amount.")
+                alert("Enter ETH/POL Amount.")
                 return
             }
             if (ethers.parseEther(ethAmt) <= 5) {
-                alert("Valid POL Amount is less than 5 POL.")
+                alert("Valid POL Amount is less than 5 ETH/POL.")
                 return
             }
             setReqStatus("Requesting...")
             console.log(`total supply: ${await token.totalSupply()}`)
             console.log(`contract balance: ${await token.balanceOf(stakingContract)}`)
 
+            
             const ethAmtInWei = ethers.parseUnits(ethAmt.toString(), "ether");
+            console.log(`ethAmtInWei: ${ethAmtInWei}`)
 
             const receipt = await stakingContract.requestTokens(ethAmtInWei);
 
@@ -225,7 +251,7 @@ export default function MyStatsCard() {
                             Contract Balance <div style={{ color: "var(--aqua)", fontSize: 20 }}>{contractBalance} GST</div>
                         </div>
                             <div>
-                                <button className={styles.WithdrawButton} onClick={() => fundContract()}>Fund Contract</button>
+                                <button className={styles.WithdrawButton} onClick={fundContract}>Fund Contract</button>
                             </div>
                         </>
                 }
@@ -263,7 +289,7 @@ export default function MyStatsCard() {
                 </div>
                 <div>
                     <button className={styles.WithdrawButton} onClick={approveTokens}>
-                        {txStatus ? txStatus : "Approve 100 GST"}
+                        {txStatus ? txStatus : "Approve 1000 GST"}
                     </button>
                 </div>
 

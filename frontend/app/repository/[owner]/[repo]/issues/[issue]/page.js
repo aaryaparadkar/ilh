@@ -24,6 +24,10 @@ export default function Issue() {
   const [estDeduction, setEstDeduction] = useState(null);
   const [inputAmount, setInputAmount] = useState(''); // Store user input amount
   const [repoId, setRepoId] = useState(null)
+
+  const [stakeholders, setStakeholders] = useState([]);
+
+
   let issueId = issue;
   // let repoId;
 
@@ -35,6 +39,7 @@ export default function Issue() {
           console.error("GitHub access LStoken not found.")
           return
         }
+
 
         const repoResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
           headers: {
@@ -49,14 +54,17 @@ export default function Issue() {
         } else {
           console.error("Failed to fetch repo info:", repoResponse.statusText)
         }
+
         if (repoData?.id, issueId) {
           console.log(repoData?.id)
-          const [winPrize, stakeCount, totalStakeAmount, highestAmt] = await getIssueInfo(repoData?.id, issue.number)
+          const [winPrize, stakeCount, totalStakeAmount, highestAmt, highestStakeBy] = await getIssueInfo(repoData?.id, issue.number)
           setIssueInfo((prev) => ({
             ...prev,
-            [issue.number]: { prize: winPrize, stakeCount, totalStakeAmount, highestAmt },
+            [issue.number]: { prize: winPrize, stakeCount, totalStakeAmount, highestAmt, highestStakeBy },
           }))
         }
+
+
         // Fetch authenticated user info
         const userResponse = await fetch(`https://api.github.com/user`, {
           headers: {
@@ -94,40 +102,61 @@ export default function Issue() {
     }
 
     fetchIssue()
+
   }, [owner, repo, issue])
+
 
   const fetchEstDeductionRate = async (repoId, issueId) => {
     try {
       console.log(repoId, issueId)
       const approxAmtWei = ethers.parseEther(inputAmount);
+
       if (stakingContract && stakingContract.getEstDeductionRateOnIssue) {
         const deductionRate = stakingContract.getEstDeductionRateOnIssue(repoId, issueId, approxAmtWei);
         setEstDeduction(ethers.formatEther(deductionRate)); // Convert from Wei to Ether for display
       } else {
         console.error("getEstDeductionRateOnIssue method not found on stakingContract");
       }
+
     } catch (error) {
       console.error("Error fetching estimated deduction:", error);
       setEstDeduction("N.A.");
     }
   }
+
   const getIssueInfo = async (repoId, issueId) => {
     try {
       if (token && account) {
         console.log("repoid", repoId)
         const [creator, prize, solved, solver, stakeCount, totalStakeAmt] = await stakingContract.getIssue(repoId, issueId)
-        let highestStakeAmt = ethers.BigNumber.from(0);
-        for (let i = 0; i < stakeCount; i++) {
-          const [staker, amt] = await stakingContract.getStake(repoId, issueId, i);
-          const stakeAmount = ethers.BigNumber.from(amt);
+
+        let highestStakeAmt = 0;
+        let highestStakeBy;
+
+        const fetchedStakeholders = [];
+
+        for (let i = 1; i < stakeCount; i++) {
+          const [index, pullReqId, staker, amt] = await stakingContract.getStake(repoId, issueId, i);
+          const stakeAmount = ethers.formatUnits(amt, 18)
+
+          fetchedStakeholders.push({ index, pullReqId, staker, stakeAmount });
+
           if (stakeAmount.gt(highestStakeAmt)) {
-            highestStakeAmt = stakeAmount;
+            highestStakeAmt = ethers.formatUnits(stakeAmount, 18);
+            highestStakeBy = staker;
           }
         }
+
+        setStakeholders(fetchedStakeholders);
+        console.log(fetchedStakeholders)
+        console.log(stakeholders)
+
         return [
           ethers.formatEther(prize),
-          stakeCount, totalStakeAmt,
-          ethers.formatEther(highestStakeAmt)
+          stakeCount,
+          totalStakeAmt,
+          ethers.formatEther(highestStakeAmt),
+          highestStakeBy
         ]
       }
     } catch (e) {
@@ -135,6 +164,9 @@ export default function Issue() {
       return ["0", 0, 0] // Default to 0 if error occurs
     }
   }
+
+
+
   return (
     <>
       {issueBody ? (
@@ -214,10 +246,10 @@ export default function Issue() {
               width={30}
               height={30}
             />
-            - Highest Stake by{" "}
-            <div style={{ color: "var(--aqua)", padding: 5, marginLeft: 5 }}>
+            - Highest Stake by {issueInfo[issue.number]?.highestStakeBy || "N.A."}
+            {/* <div style={{ color: "var(--aqua)", padding: 5, marginLeft: 5 }}>
               {issueBody?.user.login}
-            </div>
+            </div> */}
             <div
               style={{
                 border: "0.5px solid var(--divider)",
@@ -236,6 +268,7 @@ export default function Issue() {
               {issueBody?.user.login}
             </div>
           </div>
+
           <div
             style={{
               padding: "10px 3rem",
@@ -244,10 +277,12 @@ export default function Issue() {
               flexDirection: "row",
             }}
           >
-            <input style={{ width: 70, height: 30, marginRight: 10 }} onChange={(e) => setInputAmount(e.target.value)}></input>
-            <button style={{ marginRight: 10 }} onClick={() => fetchEstDeductionRate(repoId, issueId)} >Get Current Estimate Deduction on Issue</button>
+            <input placeholder="Stake Amt" style={{ width: 150, height: 30, marginRight: 10 }} onChange={(e) => setInputAmount(e.target.value)}></input>
+            <button style={{ marginRight: 10 }} onClick={() => fetchEstDeductionRate(repoId, issueId)} > Current Estimate Deduction on Issue is </button>
             {estDeduction || "N.A."}
           </div>
+
+
           <div
             style={{
               height: 0.1,
@@ -256,6 +291,8 @@ export default function Issue() {
               backgroundColor: "var(--divider)",
             }}
           ></div>
+
+
 
           <div className={styles.IssueContainer}>
             <div
@@ -319,9 +356,18 @@ export default function Issue() {
               <CommentCard comments_url={issueBody.comments_url} />
             </div>
 
+
+
+            {/* fetchedStakeholders.push({ index, pullReqId, staker, stakeAmount }); */}
+
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              <PullReqCard />
+              <PullReqCard stakeholders={stakeholders} />
             </div>
+
+
+
+
+
           </div>
         </>
       ) : (
