@@ -8,10 +8,6 @@ With GitStake, contributors use GST to stake on issues they want to solve, earn 
 
 GitStake seamlessly integrates with GitHub API, allowing developers to continue using familiar tools while benefiting from blockchain-backed features. The GST token also employs a dynamic pricing model, adapting to supply and demand, which ensures growth and stability for contributors and the platform alike.
 
-## Hackathon Theme: Open Innovation
-
-GitStake aligns with the "Open Innovation" theme by fostering collaboration and innovation in open-source development. It empowers contributors and project maintainers to work together efficiently while solving real-world challenges through technology.
-
 ## Problem Statement
 
 Open-source development faces several challenges:
